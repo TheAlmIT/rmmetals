@@ -7,20 +7,29 @@ using System.Web;
 using System.Web.Mvc;
 using PagedList.Mvc;
 using PagedList;
+using System.ComponentModel.DataAnnotations;
+
 namespace RM.Models
 {
+    
     public class Inventory
     {
         public int Id { get; set; }
+        [RegularExpression("^[0-9A-Za-z ]+$", ErrorMessage = "Enter Location Type")]
         public string Loc { get; set; }
+        [RegularExpression("^[0-9A-Za-z ]+$", ErrorMessage = "Enter Valid Type")]
         public string Type { get; set; }
+        [RegularExpression("^[0-9A-Za-z ]+$", ErrorMessage = "Enter Valid Finish")]
         public string Finish { get; set; }
+        [RegularExpression("^[0-9A-Za-z ]+$", ErrorMessage = "Enter Valid Gauge")]
         public string Gauge { get; set; }
+        [RegularExpression("^[0-9A-Za-z ]+$", ErrorMessage = "Enter Valid Width")]
         public string Width { get; set; }
+        [RegularExpression("^[0-9A-Za-z ]+$", ErrorMessage = "Enter Valid WTNET")]
         public string WTNET { get; set; }
-        public string NOOFPCS { get; set; }      
+        public string NOOFPCS { get; set; }
         public string SelectedPage { get; set; }
-        public List<Inventory>  ProductList { get; set; }
+        public List<Inventory> ProductList { get; set; }
         public IPagedList<Inventory> IPagedProductsList { get; set; }
         public List<SelectListItem> PageList
         {
@@ -34,26 +43,21 @@ namespace RM.Models
                 };
             }
         }
-
-
         public IEnumerable<SelectListItem> GetPages()
         {
             return PageList.Select(a => new SelectListItem()
 
             {
-                Text= a.Text , Value = a.Value, Selected = (a.Value== SelectedPage)
+                Text = a.Text,
+                Value = a.Value,
+                Selected = (a.Value == SelectedPage)
             }
             );
-
         }
-
-
         public List<Inventory> ProductsList()
         {
             List<Inventory> productsListItems = new List<Inventory>();
-
             string cs = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
-
             using (MySqlConnection con = new MySqlConnection(cs))
             {
                 con.Open();
@@ -74,13 +78,10 @@ namespace RM.Models
                     productsListItems.Add(products);
                 }
             }
-
             return productsListItems;
         }
-
         public Inventory productDetails(int id)
         {
-
             string cs = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
 
             using (MySqlConnection con = new MySqlConnection(cs))

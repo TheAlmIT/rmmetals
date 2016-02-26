@@ -1065,7 +1065,7 @@ table {
 	background-color:transparent
 }
 th {
-	text-align:left
+	text-align:center;
 }
 .table {
 	width:100%;
@@ -2969,7 +2969,7 @@ textarea.input-group-sm>.form-control, textarea.input-group-sm>.input-group-addo
 }
 }
 .navbar-fixed-top, .navbar-fixed-bottom {
-	/*position:fixed;*/
+	position:fixed;
 	right:0;
 	left:0;
 	border-width:0 0 1px

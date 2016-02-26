@@ -4,15 +4,60 @@
 
 @model Inventory
 
+@{
+    ViewBag.PageName = "Inventory";
+}
 
-@Scripts.Render("~/bundles/jquery")
+<link href="~/Content/jquery-ui-1.10.4.custom.min.css" rel="stylesheet" />
+<script src="~/Scripts/jquery-ui-1.10.4.custom.min.js"></script>
+
 <script type="text/javascript">
+    $m = jQuery.noConflict();
+</script>
+<script type="text/javascript">
+    $m(function () {
+
+        $m('#Loc').autocomplete(
+            {
+                source: '@Url.Action("GetLocation")'
+            });
+        $m('#Type').autocomplete(
+           {
+               source: '@Url.Action("GetType")'
+           });
+        $m('#Finish').autocomplete(
+           {
+               source: '@Url.Action("GetFinish")'
+           });
+        $m('#Gauge').autocomplete(
+           {
+               source: '@Url.Action("GetGauge")'
+           });
+        $m('#Width').autocomplete(
+           {
+               source: '@Url.Action("GetWidth")'
+           });
+        $m('#WTNET').autocomplete(
+           {
+               source: '@Url.Action("GetWTNET")'
+           });
+    });
+
     $(document).ready(function () {
+            $('#Pages').change(function () {
+            val = $m(this).val();
+            if (val == 50) {
+                window.location.href = '@Html.Raw(@Url.Action("index", "Inventory", new { Pages = 50,
+                                       Loc = Model.Loc,
+                                       Type = Model.Type,
+                                       Finish = Model.Finish,
+                                       Gauge = Model.Gauge,
+                                       Width = Model.Width,
+                                       WTNET = Model.WTNET
+                                   }))'
 
-        $('#Pages').change(function () {
-
-            val = $(this).val();
-            if (val == 100) {
+            }
+            else if (val == 100) {
 
                 window.location.href = '@Html.Raw(@Url.Action("index", "Inventory", new { Pages = 100,
                                        Loc = Model.Loc,
@@ -24,20 +69,8 @@
                                    }))'
 
             }
-            else if (val == 150) {
-
-                window.location.href = '@Html.Raw(@Url.Action("index", "Inventory", new { Pages = 150,
-                                       Loc = Model.Loc,
-                                       Type = Model.Type,
-                                       Finish = Model.Finish,
-                                       Gauge = Model.Gauge,
-                                       Width = Model.Width,
-                                       WTNET = Model.WTNET
-                                   }))'
-
-            }
             else {
-                window.location.href = '@Html.Raw(@Url.Action("index", "Inventory", new { Pages = 50,
+                window.location.href = '@Html.Raw(@Url.Action("index", "Inventory", new { Pages = 150,
                                        Loc = Model.Loc,
                                        Type = Model.Type,
                                        Finish = Model.Finish,
@@ -51,41 +84,53 @@
     });
 </script>
 
-
-@if (Model != null)
-            {
-    @Html.PagedListPager(Model.IPagedProductsList, page => Url.Action("Index", new
-{
-    page,
-    Loc = Model.Loc,
-    Type = Model.Type,
-    Finish = Model.Finish,
-    Gauge = Model.Gauge,
-    Width = Model.Width,
-    WTNET = Model.WTNET,
-    Pages = Request.QueryString["Pages"],
-    sortOrder = Request["sortOrder"]
-}),
-            new PagedListRenderOptions() { Display = PagedListDisplayMode.IfNeeded })
-
-}
-
-
-<div class="col-md-8 col-sm-6 aboutus wow fadeInLeft animated">
+<div class="col-md-12 col-sm-6 aboutus wow fadeInLeft animated">
     <div class="bs-example" data-example-id="striped-table">
         <div class="table-responsive">
             <h2 class="wellcome">Inventory</h2>
-            <table class="table table-bordered table-hover">
-                <thead>
-                    @using (Html.BeginForm("Index", "Inventory", new { Pages = ViewBag.Pages }, FormMethod.Post))
-                    {
 
+            @Html.ValidationSummary(false,null)
+            @Html.ActionLink("Export To Excel", "Index", new
+       {
+           Export = 1,
+           Loc = Model.Loc,
+           Type = Model.Type,
+           Finish = Model.Finish,
+           Gauge = Model.Gauge,
+           Width = Model.Width,
+           WTNET = Model.WTNET,
+           Pages = Request.QueryString["Pages"],
+           sortOrder = Request["sortOrder"]
+       })
+            @if (Model != null)
+            {
+                if (Model.IPagedProductsList != null)
+                {
+                    @Html.PagedListPager(Model.IPagedProductsList, page => Url.Action("Index", new
+               {
+                   page,
+                   Loc = Model.Loc,
+                   Type = Model.Type,
+                   Finish = Model.Finish,
+                   Gauge = Model.Gauge,
+                   Width = Model.Width,
+                   WTNET = Model.WTNET,
+                   Pages = Request.QueryString["Pages"],
+                   sortOrder = Request["sortOrder"]
+               }),
+                     new PagedListRenderOptions() { Display = PagedListDisplayMode.IfNeeded })
+
+                }
+            }
+            <table class="table table-bordered table-hover">
+
+                <thead>
+                    @using (Html.BeginForm("Index", "Inventory", new { Pages = ViewBag.Pages }))
+                    {
                         <tr>
                             <th>
-
-                            </th>
-                            <th>
-                                @Html.TextBoxFor(model => model.Loc, null, new { @placeholder = "Location", @class = "form-control" })
+                                @Html.TextBoxFor(model => model.Loc,string.Empty, new { @placeholder = "Location", @class = "form-control" })
+                                @*@Html.ValidationMessageFor(model =>model.Loc,null)*@
                             </th>
                             <th>
                                 @Html.TextBoxFor(model => model.Type, null, new { @placeholder = " Type", @class = "form-control" })
@@ -106,20 +151,15 @@
                                 @Html.DropDownList("Pages", ViewBag.ListItems as IEnumerable<SelectListItem>, new { @class = "btn btn-default" })
                             </th>
                             <th>
-                                <input type="submit" name="submit" value="search" class="btn btn-default signin" />
+                                <input type="submit" name="submit" value="search" class="btn btn-default signin" style="background-color:orange;" />
                             </th>
-
                         </tr>
-
-
                     }
                 </thead>
 
                 <thead>
                     <tr>
-                        <th>
-                            #
-                        </th>
+
                         <th>
                             @Html.ActionLink("Location", "Index", new
                        {
@@ -211,59 +251,54 @@
                            WTNET = Model.WTNET
                        }, new { style = "color:white" })
                         </th>
-                        @if (User.Identity.IsAuthenticated)
-                        {
-                            <th>
-                                Request Quote
-                            </th>
-                        }
+
+                        <th>
+                            Request Quote
+                        </th>
+
                     </tr>
                 </thead>
 
                 @if (Model != null)
                 {
-                    int i = 1;
-                    foreach (var item in Model.IPagedProductsList)
+                    if (Model.IPagedProductsList != null)
                     {
-                        <tbody>
-                            <tr>
-                                <td>
-                                    @i
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Loc)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Type)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Finish)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Gauge)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Width)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.WTNET)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.NOOFPCS)
-                                </td>
-
-                                @if (User.Identity.IsAuthenticated)
-                                {
+                        foreach (var item in Model.IPagedProductsList)
+                        {
+                            <tbody>
+                                <tr>
                                     <td>
-                                        <input type="button" value="Request quote" class="btn btn-default signin" id="btnRequestQuote" onclick="if (confirm('Do you want to Request quote?')) { window.location.href = '@Url.Action("index", "Inventory", new { Id = item.Id })' }" />
+                                        @Html.DisplayFor(modelItem => item.Loc)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Type)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Finish)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Gauge)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Width)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.WTNET)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.NOOFPCS)
                                     </td>
 
-                                }
+                                    @if (User.Identity.IsAuthenticated)
+                                    {
+                                        <td>
+                                            <input type="button" value="Request quote" class="btn btn-default signin" id="btnRequestQuote" onclick="if (confirm('Do you want to Request quote?')) { window.location.href = '@Url.Action("index", "Inventory", new { Id = item.Id })' }" />
+                                        </td>
+                                    }
 
-                            </tr>
-                        </tbody>
-                        i = i + 1;
-
+                                </tr>
+                            </tbody>
+                        }
                     }
                 }
 
@@ -272,84 +307,26 @@
 
             @if (Model != null)
             {
-                @Html.PagedListPager(Model.IPagedProductsList, page => Url.Action("Index", new
-           {
-               page,
-               Loc = Model.Loc,
-               Type = Model.Type,
-               Finish = Model.Finish,
-               Gauge = Model.Gauge,
-               Width = Model.Width,
-               WTNET = Model.WTNET,
-               Pages = Request.QueryString["Pages"],
-               sortOrder = Request["sortOrder"]
-           }),
-            new PagedListRenderOptions() { Display = PagedListDisplayMode.IfNeeded })
+                if (Model.IPagedProductsList != null)
+                {
 
+                    @Html.PagedListPager(Model.IPagedProductsList, page => Url.Action("Index", new
+               {
+                   page,
+                   Loc = Model.Loc,
+                   Type = Model.Type,
+                   Finish = Model.Finish,
+                   Gauge = Model.Gauge,
+                   Width = Model.Width,
+                   WTNET = Model.WTNET,
+                   Pages = Request.QueryString["Pages"],
+                   sortOrder = Request["sortOrder"]
+               }),
+                     new PagedListRenderOptions() { Display = PagedListDisplayMode.IfNeeded })
+
+                }
             }
 
         </div>
     </div>
 </div>
-
-<div class="col-md-4 col-sm-6 wow fadeInLeft animated">
-    <h2 class="wellcome">Testimonials</h2>
-    <div id="tcb-testimonial-carousel" class="carousel slide" data-ride="carousel">
-        <!-- Indicators -->
-        <ol class="carousel-indicators tesimonialsradios">
-            <li data-target="#tcb-testimonial-carousel" data-slide-to="0" class="active"></li>
-            <li data-target="#tcb-testimonial-carousel" data-slide-to="1"></li>
-            <li data-target="#tcb-testimonial-carousel" data-slide-to="2"></li>
-        </ol>
-        <!-- Wrapper for slides -->
-        <div class="carousel-inner">
-            <div class="item active">
-                <div class="row">
-                    <div class="col-xs-12 col-sm-12 wow fadeInLeft animated">
-                        <figure class="clearfix">
-                            <div class="col-md-3 col-sm-3 col-xs-12"><img class="img-responsive media-object" src="~/images/testimonials_man.png"> </div>
-                            <div class="col-md-9 col-sm-9 col-xs-12">
-                                <p> RM Metals, a division of RM Creation Inc., is headquartered in New Jersey and has been in existence for over 20 years. Over the years we have developed a solid reputation in the trading and distribution of stainless steel. </p>
-                                <p>Worldwide procurement of material allows us to give you a very competitive price. Our company thrives on respect, responsibility, and reputation.</p>
-                                <blockquote class="no-margin">
-                                    <p>NAEME HERE : DESIGNATION HERE</p>
-                                </blockquote>
-                            </div>
-                        </figure>
-                    </div>
-                </div>
-            </div>
-            <div class="item">
-                <div class="row">
-                    <div class="col-xs-12 col-sm-12 wow fadeInLeft animated">
-                        <figure class="clearfix">
-                            <div class="col-md-3 col-sm-3 col-xs-12"><img class="img-responsive media-object" src="~/images/testimonials_man.png"> </div>
-                            <div class="col-md-9 col-sm-9 col-xs-12">
-                                <p> RM Metals, a division of RM Creation Inc., is headquartered in New Jersey and has been in existence for over 20 years. Over the years we have developed a solid reputation in the trading and distribution of stainless steel. </p>
-                                <p>Worldwide procurement of material allows us to give you a very competitive price. Our company thrives on respect, responsibility, and reputation.</p>
-                                <blockquote class="no-margin">
-                                    <p>NAEME HERE : DESIGNATION HERE</p>
-                                </blockquote>
-                            </div>
-                        </figure>
-                    </div>
-                </div>
-            </div>
-            <div class="item">
-                <div class="row">
-                    <div class="col-xs-12 col-sm-12 wow fadeInLeft animated">
-                        <figure class="clearfix">
-                            <div class="col-md-3 col-sm-3 col-xs-12"><img class="img-responsive media-object" src="~/images/testimonials_man.png"> </div>
-                            <div class="col-md-9 col-sm-9 col-xs-12">
-                                <p> RM Metals, a division of RM Creation Inc., is headquartered in New Jersey and has been in existence for over 20 years. Over the years we have developed a solid reputation in the trading and distribution of stainless steel. </p>
-                                <p>Worldwide procurement of material allows us to give you a very competitive price. Our company thrives on respect, responsibility, and reputation.</p>
-                                <blockquote class="no-margin">
-                                    <p>NAEME HERE : DESIGNATION HERE</p>
-                                </blockquote>
-                            </div>
-                        </figure>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>

@@ -2,9 +2,40 @@
 @using PagedList.Mvc;
 @using RM.Models;
 @model UserTracking
-@if (Model != null)
+
+
+@{
+    ViewBag.PageName = "Admin";
+}
+
+
+<link href="~/Content/jquery-ui-1.10.4.custom.min.css" rel="stylesheet" />
+<script src="~/Scripts/jquery-ui-1.10.4.custom.min.js"></script>
+<script src="~/Scripts/jquery.validate.min.js"></script>
+
+<script type="text/javascript">
+    $m = jQuery.noConflict();
+</script>
+<script type="text/javascript">
+
+    $m(document).ready(function () {
+
+        $m('#StartDate').datepicker();
+        $m('#EndDate').datepicker();
+
+    });
+
+
+</script>
+
+<div class="col-md-12 col-sm-6 aboutus wow fadeInLeft animated" style="width:100%">
+    <div class="bs-example" data-example-id="striped-table">
+        <div class="table-responsive">
+            <h2 class="wellcome">Reports</h2>
+
+            @if (Model != null)
             {
-    @Html.PagedListPager(Model.PagedUserTrackingList, page => Url.Action("Index", new
+                @Html.PagedListPager(Model.PagedUserTrackingList, page => Url.Action("Index", new
 {
     page,
     Model.StartDate,
@@ -18,11 +49,10 @@
     Model.RadioButtonSelectedValue
 }),
                         new PagedListRenderOptions() { Display = PagedListDisplayMode.IfNeeded })
-}
-<div class="col-md-8 col-sm-6 aboutus wow fadeInLeft animated" style="width:100%">
-    <div class="bs-example" data-example-id="striped-table">
-        <div class="table-responsive">
-            <h2 class="wellcome">Reports</h2>
+            }
+
+            @Html.ValidationSummary(false, null, new { @class = "text-danger" })
+
             <table class="table table-bordered table-hover" border="0">
 
                 @using (@Html.BeginForm())
@@ -42,9 +72,10 @@
                             @Html.DropDownListFor(model => model.EndDateAmPm, new SelectList(ViewBag.GetAmPm, "Value", "Text"))
                             &nbsp;&nbsp;&nbsp;
                             @Html.EditorFor(model => model.Name, new { htmlAttributes = new { placeholder = "Enter User Name" } })
+                           
                         </td>
 
-                       
+
                     </tr>
                             <tr>
                                 <td>
@@ -58,13 +89,10 @@
             </table>
             @if (Model != null)
             {
-                int i = 1;
+
                 <table class="table table-bordered table-hover">
                     <thead>
                         <tr>
-                            <th>
-                                #
-                            </th>
                             <th>
                                 @Html.DisplayNameFor(model => model.IPAddress)
                             </th>
@@ -96,14 +124,11 @@
                         </tr>
                     </thead>
 
-                   
+
                     @foreach (var item in Model.PagedUserTrackingList)
                     {
                         <tbody>
                             <tr>
-                                <td>
-                                    @i
-                                </td>
                                 <td>
                                     @Html.DisplayFor(modelItem => item.IPAddress)
                                 </td>
@@ -136,7 +161,7 @@
                         </tbody>
                     }
                 </table>
-                i = i + 1;
+
             }
             @if (Model != null)
             {
@@ -159,3 +184,4 @@
         </div>
     </div>
 </div>
+
