@@ -1,8 +1,11 @@
 ﻿@using PagedList;
 @using PagedList.Mvc;
 @using RM.Models;
-
 @model Inventory
+
+@{
+    ViewBag.PageName = "Inventory";
+}
 <link href="~/Scripts/jquery-ui-1.10.4.custom.min.css" rel="stylesheet" />
 <script src="~/Scripts/jquery-1.10.2.min.js"></script>
 <script src="~/Scripts/jquery-1.10.2.js"></script>
@@ -77,7 +80,7 @@
            WTNET = Model.WTNET,
            Pages = Request.QueryString["Pages"],
            sortOrder = Request["sortOrder"]
-       })
+       }, new { })  @* The Style should be added here to move it right *@
 
             @if (Model != null)
             {
@@ -112,7 +115,7 @@
                             <th>
                                 @Html.DropDownListFor(model => model.Type, Model.GetType(), "Type", new { @class = "form-control" })
                             <th>
-                                @Html.DropDownListFor(model => model.Finish, Model.GetFinish(), "Finish", new { @class = "form-control" })
+                                @Html.DropDownListFor(model => model.Finish, Model.GetFinish(), "Finish", new { @class = "form-control", style = "width: 100px;" })
                             </th>
                             <th>
                                 @Html.DropDownListFor(model => model.Gauge, Model.GetGauge(), "Gauge", new { @class = "form-control" })
@@ -121,7 +124,7 @@
                                 @Html.DropDownListFor(model => model.Width, Model.GetWidth(), "Width", new { @class = "form-control" })
                             </th>
                             <th>
-                                @Html.DropDownListFor(model => model.WTNET, Model.GetWTNET(), "WTNET", new { @class = "form-control" })
+                                @Html.DropDownListFor(model => model.WTNET, Model.GetWTNET(), "Net Wt", new { @class = "form-control" })
                             </th>
                             <th>
                                 @Html.DropDownList("Pages", ViewBag.ListItems as IEnumerable<SelectListItem>, new { @class = "form-control" })
@@ -210,7 +213,7 @@
                        }, new { style = "color:white" })
                         </th>
                         <th>
-                            @Html.ActionLink("WTNET", "Index", new
+                            @Html.ActionLink("Net Wt", "Index", new
                        {
                            Pages = ViewBag.Pages,
                            sortOrder = ViewBag.WTNETSortParm,
@@ -223,7 +226,7 @@
                        }, new { style = "color:white" })
                         </th>
                         <th>
-                            @Html.ActionLink("NOOFPCS", "Index", new
+                            @Html.ActionLink("Pieces", "Index", new
                        {
                            Pages = ViewBag.Pages,
                            sortOrder = ViewBag.NOOFPCSSortParm,

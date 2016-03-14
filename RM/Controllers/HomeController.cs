@@ -13,15 +13,35 @@ namespace RM.Controllers
 {
     public class HomeController : Controller
     {
-        public ActionResult Index()
-        {   
-               
-            return View();
-        }
-        public ActionResult Temp()
-        {
+       
+            public ActionResult Index()
+            {
 
-            return View();
+                return View();
+            }
+            public ActionResult Policies()
+            {
+
+                return View();
+            }
+
+            public ActionResult DataTables()
+            {
+
+                return View();
+            }
+
+
+            public ActionResult LocalDistribution()
+            {
+
+                return View();
+            }
+
+            public ActionResult ExportSales()
+            {
+
+                return View();
+            }
         }
     }
-}

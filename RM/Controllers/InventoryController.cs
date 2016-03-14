@@ -66,10 +66,13 @@ namespace RM.Controllers
                 quote.insert(quote);
 
                 var smtpClient = new SmtpClient();
-                var message = new MailMessage("no-reply@suteki.co.uk", "admin@gmail.com")
+                string fromEmailId = System.Configuration.ConfigurationManager.AppSettings["SystemEmailId"];
+                string toEmailId = System.Configuration.ConfigurationManager.AppSettings["RequestQuoteToEmailId"];
+
+                var message = new MailMessage(fromEmailId, toEmailId)
                 {
-                    Subject = "Requested Quote" + quote.product.Loc + quote.product.Type + quote.product.Finish + quote.product.Gauge + quote.product.Width + quote.product.WTNET + quote.product.NOOFPCS,
-                    Body = "User Name " + User.Identity.GetUserName() + Environment.NewLine + "Phone Number :" + quote.PhoneNumber + Environment.NewLine + "IP Address:" + Request.ServerVariables["REMOTE_ADDR"]
+                    Subject = "Requested Quote",
+                    Body = "User Name : " + User.Identity.GetUserName() + Environment.NewLine + "Phone Number : " + quote.PhoneNumber + Environment.NewLine + "IP Address : " + Request.ServerVariables["REMOTE_ADDR"] + Environment.NewLine + "Location : " + quote.product.Loc + Environment.NewLine + "Type : " + quote.product.Type + Environment.NewLine + "Finish : " + quote.product.Finish + Environment.NewLine + "Gauge : " + quote.product.Gauge + Environment.NewLine + "Width : " + quote.product.Width + Environment.NewLine + "Net Wt : " + quote.product.WTNET + Environment.NewLine + "Pieces : " + quote.product.NOOFPCS,
 
                 };
                 smtpClient.Send(message);
@@ -82,12 +85,14 @@ namespace RM.Controllers
                 grid.DataSource = from data in pro.ProductList
                                   select new
                                   {
+                                      
                                       Location = data.Loc,
                                       Type = data.Type,
                                       Finish = data.Finish,
                                       Gauge = data.Gauge,
                                       Width = data.Width,
-                                      WTNET = data.WTNET
+                                      WTNET = data.WTNET,
+                                      NOOFPCS = 0
                                   };
                 grid.DataBind();
                 Response.AddHeader("content-disposition", "attachment; filename=MyExcelFile.xls");

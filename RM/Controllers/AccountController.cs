@@ -234,10 +234,11 @@ namespace RM.Controllers
                 var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
 
                 var smtpClient = new SmtpClient();
-                var message = new MailMessage("no-reply@suteki.co.uk", "admin@gmail.com")
+                string fromEmailId = System.Configuration.ConfigurationManager.AppSettings["SystemEmailId"];
+                var message = new MailMessage(fromEmailId, model.Email)
                 {
-                    Subject = "password Reset",
-                    Body = "User Name " + User.Identity.GetUserName() + Environment.NewLine + "Click the link Below to Reset your Password"+callbackUrl
+                    Subject = "Password Reset",
+                    Body = "Hi " + User.Identity.GetUserName() + Environment.NewLine + "Click the link Below to Reset your Password"+callbackUrl
 
                 };
                 smtpClient.Send(message);

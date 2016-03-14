@@ -88,37 +88,29 @@
 
                     <nav class="collapse navbar-collapse clearfix" role="navigation">
                         <ul class="nav navbar-nav navbar-right">
-                            <li class="dropdown active">
+                            <li id="home" class="dropdown active">
                                 @Html.ActionLink("Home", "Index", "Home")
                             </li>
-                            <li>@Html.ActionLink("Inventory", "Index", "Inventory")</li>
+                            <li id="Inventory" class="dropdown  @((ViewBag.PageName == "Inventory") ? "active" : "")">@Html.ActionLink("Inventory", "Index", "Inventory")</li>
+
                             @if (Request.IsAuthenticated)
                             {
-                               
-                            <li class="dropdown">
-                                <a href="contact.html" class="dropdown-toggle" data-toggle="dropdown">Admin</a>
-                                <ul class="dropdown-menu">
-                                    <li>@Html.ActionLink("Report", "Index", "Report")</li>
-                                    <li>@Html.ActionLink("UpLoad Inventory", "Create", "Inventory")</li>
-                                </ul>
-                            </li>
-                                }
-                            
-                            <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">DATA TABLES </a>
-                                <!--<ul class="dropdown-menu">
-                                    <li><a href="portfolio-4col.html">Portfolio 4col</a></li>
-                                    <li><a href="portfolio-item.html">Portfolio Details</a></li>
-                                </ul>-->
-                            </li>
-                            <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">POLICIES </a>
-                                <!--   <ul class="dropdown-menu">
-                                       <li><a href="blog.html">Blog with Sidebar</a></li>
-                                       <li><a href="blog-item.html">Blog Single</a></li>
-                                   </ul>-->
-                            </li>
-                            
+
+                                <li id="Admin" class="dropdown @((ViewBag.PageName == "Admin") ? "active" : "")">
+                                    <a class="dropdown-toggle" data-toggle="dropdown">Admin</a>
+                                    <ul class="dropdown-menu">
+                                        <li>@Html.ActionLink("Report", "Index", "Report")</li>
+                                        <li>@Html.ActionLink("UpLoad Inventory", "Create", "Inventory")</li>
+                                    </ul>
+                                </li>
+
+                            }
+                            <li class="dropdown @((ViewBag.PageName == "Data Tables") ? "active" : "")">@Html.ActionLink("Data Tables", "DataTables", "Home") </li>
+
+
+                            <li class="dropdown @((ViewBag.PageName == "Policies") ? "active" : "")">@Html.ActionLink("Policies", "Policies", "Home") </li>
+
+
                         </ul>
                     </nav><!--/ Navigation end -->
 
@@ -192,7 +184,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-3 col-sm-3 wow bounce animated">
-                    <a href="#"><img class="img-responsive" src="~/images/downloadbutton.png"></a>
+                    <a href="~/RM_METALS_BROCHURE.pdf" download="RM_METALS_BROCHURE.pdf"><img class="img-responsive" src="~/images/downloadbutton.png"></a>
                 </div>
 
                 <div class="col-md-5 col-sm-4 wow bounce animated">
@@ -239,7 +231,7 @@
                             <p>We stock stainless steel type 201, 301, 304/304L, 316/316L, 409, 430, and 439 in coil, sheet, and plate form. Besides these types, we can obtain other types and forms as per your specifications.</p>
                         </div>
                         <div class="readmore1">
-                            <a href="#">Read More</a>
+                            @Html.ActionLink("Read More", "DataTables", "Home")
                         </div>
                     </div>
                 </div><!--/ End 2nd service -->
@@ -251,7 +243,7 @@
                             <p>We stock stainless steel type 201, 301, 304/304L, 316/316L, 409, 430, and 439 in coil, sheet, and plate form. Besides these types, we can obtain other types and forms as per your specifications.</p>
                         </div>
                         <div class="readmore">
-                            <a href="#">Read More</a>
+                            @Html.ActionLink("Read More", "LocalDistribution", "Home")
                         </div>
 
                     </div>
@@ -270,6 +262,7 @@
                     </div>
                 </div><!--/ End 4th service -->
             </div>
+
 
             <!---About us---->
 
@@ -296,7 +289,7 @@
             <div class="row">
 
                 <div class="col-md-6 col-sm-12">
-                    <h2 class="wellcome">Testimonials</h2>
+                    <h2 class="wellcome">Certifications</h2>
                     <div id="tcb-testimonial-carousel" class="carousel slide" data-ride="carousel">
                         <!-- Indicators -->
                         <ol class="carousel-indicators tesimonialsradios">
@@ -377,7 +370,7 @@
 
 
                 <div class="col-md-6 col-sm-12">
-                    <h2 class="wellcome">Loaction</h2>
+                    <h2 class="wellcome">Loction</h2>
                     <img src="~/images/map.png" class="img-responsive">
                 </div>
 
@@ -450,7 +443,7 @@
 
                     <div class="col-md-3 col-sm-3 wow fadeInRight animated">
                         <div class="footer-icons">
-                            <h3 class="footer-title">Fallow Us</h3>
+                            <h3 class="footer-title">Follow Us</h3>
                             <p class="footer-social">
                                 <a href="#"><i class="fa fa-twitter"></i></a>
                                 <a href="#"><i class="fa fa-facebook"></i></a>
