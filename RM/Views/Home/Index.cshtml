@@ -390,19 +390,20 @@
 
 
                             <ul>
-                                <li><a href="#">HOME </a></li>
-                                <li><a href="#">LOCAL DISTRIBUTION</a></li>
+                                <li>@Html.ActionLink("Home", "Index", "Home")</li>
+                                <li>@Html.ActionLink("LOCAL DISTRIBUTION", "LOCALDISTRIBUTION", "Home")</li>
                                 <li><a href="#">EXPORT SALES   </a></li>
-                                <li><a href="#">INVENTORY</a></li>
-                                <li><a href="#">DATA TABLES   </a></li>
-                                <li><a href="#">POLICIES   </a></li>
+                                <li>@Html.ActionLink("INVENTORY", "Index", "INVENTORY")</li>
+                                <li>@Html.ActionLink("DATA TABLES", "DATATABLES", "Home")</li>
+                                <li>@Html.ActionLink("POLICIES", "POLICIES", "Home")</li>
                             </ul>
+
 
 
                         </div>
                     </div><!--/ end about us -->
 
-                    <div class="col-md-3 col-sm-3 wow fadeInRight animated">
+                    @*<div class="col-md-3 col-sm-3 wow fadeInRight animated">
                         <div class="quicklinks">
                             <h3 class="footer-title">Quick Links</h3>
                             <ul>
@@ -414,7 +415,7 @@
                                 <li><a href="#">POLICIES   </a></li>
                             </ul>
                         </div>
-                    </div><!--/ end recent post -->
+                    </div>*@<!--/ end recent post -->
 
                     <div class="col-md-3 col-sm-3 wow fadeInRight animated">
 

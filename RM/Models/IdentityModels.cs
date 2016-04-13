@@ -44,8 +44,8 @@ namespace RM.Models
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<IdentityUser>().ToTable("MyUsers").Property(p => p.Id).HasColumnName("UserId");
-            modelBuilder.Entity<ApplicationUser>().ToTable("MyUsers").Property(p => p.Id).HasColumnName("UserId");
+            modelBuilder.Entity<IdentityUser>().ToTable("myusers").Property(p => p.Id).HasColumnName("UserId");
+            modelBuilder.Entity<ApplicationUser>().ToTable("myusers").Property(p => p.Id).HasColumnName("UserId");
            
         }
 
