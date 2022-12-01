@@ -10,9 +10,10 @@
     ================================================== -->
     <meta charset="utf-8">
     <title>RM-Metals</title>
-    <meta name="description" content="">
-    <meta name="author" content="">
+    <meta name="description" content="RM Metals is a major participant in the stainless steel industry for over 30 years. We are part of a global market with stocking warehouses throughout the USA. We are very competitive , as well as reliable, due to our diversity. We specialize in the stainless steel sheet and coil market, as well as other stainless products. We are very committed to providing excellence in both service and quality. We look forward to assisting you">
 
+    <meta name="author" content="">
+    <meta name="google-site-verification" content="fNBWngWcO0YQqKUHB_9cK-fHwz6mbYKbqduky1XWUQE">
     <!-- Mobile Specific Metas
     ================================================== -->
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -38,36 +39,42 @@
       <script src="~/js/html5shiv.js"></script>
       <script src="~/js/respond.min.js"></script>
     <![endif]-->
-
+    <style>
+        .headermenu li a {
+            font-weight: bold;
+            font-family: Lucida Fax;
+        }
+    </style>
 </head>
-<body>
+<body style="background: #dddddd;">
     <!-- Header start -->
     <header id="header" class="navbar-fixed-top main-nav" role="banner">
         <div class="container">
             <div class="row">
                 <div class="col-md-12 heade_bg">
-                    <!--/ Top info start -->
+                    <!--/ Top info start  style='background-image:url(../../images/BannerBacknew.jpg); background-repeat:repeat-x'-->
                     <div class="top-info">
-                        <ul class="pull-right">
+                        <ul class="pull-right" style="color:white;">
                             <!-- Social links -->
                             <li class="social-icon">
-                                <a id="tooltip2" data-toggle="tooltip" data-placement="top" title="Facebook" href="#">
-                                    <i class="fa fa-facebook"></i>
-                                </a>
-                                <a id="tooltip1" data-toggle="tooltip" data-placement="top" title="Twitter" href="https://twitter.com/RMCreations1">
-                                    <i class="fa fa-twitter"></i>
-                                </a>
-                                <a id="tooltip3" href="#" data-toggle="tooltip" data-placement="top" title="Google+">
-                                    <i class="fa fa-linkedin"></i>
-                                </a>
-                                <a id="tooltip4" href="#" data-toggle="tooltip" data-placement="top" title="Dribble">
-                                    <i class="fa fa-skype"></i>
-                                </a>
-                                <a id="tooltip2" data-toggle="tooltip" data-placement="top" title="Facebook" href="#">
-                                    <i class="fa fa-comments"></i>
-                                </a>
-
-
+                                <a href="https://twitter.com/RM_Metals" target="_blank"><i class="fa fa-twitter"></i></a>
+                                <a href="https://www.facebook.com/profile.php?id=100054251348160" target="_blank"><i class="fa fa-facebook"></i></a>
+                                <a href="https://www.linkedin.com/company/rm-metals" target="_blank"><i class="fa fa-linkedin"></i></a>
+                                @*<a id="tooltip2" data-toggle="tooltip" data-placement="top" title="Facebook" href="#">
+            <i class="fa fa-facebook" style="font-weight: bold;"></i>
+        </a>
+        <a id="tooltip1" data-toggle="tooltip" data-placement="top" title="Twitter" href="https://twitter.com/RMCreations1">
+            <i class="fa fa-twitter" style="font-weight:bold;"></i>
+        </a>*@
+                                @*  <a id="tooltip3" href="#" data-toggle="tooltip" data-placement="top" title="Google+">
+            <i class="fa fa-linkedin"></i>
+        </a>
+        <a id="tooltip4" href="#" data-toggle="tooltip" data-placement="top" title="Dribble">
+            <i class="fa fa-skype"></i>
+        </a>
+        <a id="tooltip2" data-toggle="tooltip" data-placement="top" title="Facebook" href="#">
+            <i class="fa fa-comments"></i>
+        </a>*@
                             </li><!-- Social links end-->
                             @Html.Partial("_LoginPartial")
 
@@ -82,12 +89,12 @@
                             <span class="icon-bar"></span>
                         </button>
                         <a class="navbar-brand logo" href='@Url.Action("Index", "Home")'>
-                            <img class="img-responsive" src="~/images/logo.png" alt="logo">
+                            <img class="img-responsive" src="~/images/Logo.png" alt="logo">
                         </a>
                     </div><!--/ Logo end -->
 
                     <nav class="collapse navbar-collapse clearfix" role="navigation">
-                        <ul class="nav navbar-nav navbar-right">
+                        <ul class="nav navbar-nav navbar-right headermenu" style="">
                             <li id="home" class="dropdown active">
                                 @Html.ActionLink("Home", "Index", "Home")
                             </li>
@@ -95,22 +102,27 @@
 
                             @if (Request.IsAuthenticated)
                             {
-
-                                <li id="Admin" class="dropdown @((ViewBag.PageName == "Admin") ? "active" : "")">
-                                    <a class="dropdown-toggle" data-toggle="dropdown">Admin</a>
-                                    <ul class="dropdown-menu">
-                                        <li>@Html.ActionLink("Report", "Index", "Report")</li>
-                                        <li>@Html.ActionLink("UpLoad Inventory", "Create", "Inventory")</li>
-                                    </ul>
-                                </li>
+                                if (User.IsInRole("Admin"))
+                                {
+                                    <li id="Admin" class="dropdown @((ViewBag.PageName == "Admin") ? "active" : "")">
+                                        <a class="dropdown-toggle" data-toggle="dropdown">Admin</a>
+                                        <ul class="dropdown-menu">
+                                            <li>@Html.ActionLink("Report", "Index", "Report")</li>
+                                            <li>@Html.ActionLink("UpLoad Inventory", "Create", "Inventory")</li>
+                                            <li>@Html.ActionLink("Approve Users", "Approval", "Inventory")</li>
+                                            <li>@Html.ActionLink("InActivate Users", "InActive", "Inventory")</li>
+                                            <li>@Html.ActionLink("Manage Inventory", "Index", "Admin")</li>
+                                        </ul>
+                                    </li>
+                                }
 
                             }
-                            <li class="dropdown @((ViewBag.PageName == "Data Tables") ? "active" : "")">@Html.ActionLink("Data Tables", "DataTables", "Home") </li>
+                            <li class="dropdown @((ViewBag.PageName == "DataTables") ? "active" : "")">@Html.ActionLink("Data Tables", "DataTables", "Home") </li>
 
 
                             <li class="dropdown @((ViewBag.PageName == "Policies") ? "active" : "")">@Html.ActionLink("Policies", "Policies", "Home") </li>
 
-
+                            <li class="dropdown @((ViewBag.PageName == "Documents") ? "active" : "")">@Html.ActionLink("Documents", "Documents", "Home") </li>
                         </ul>
                     </nav><!--/ Navigation end -->
 
@@ -139,25 +151,21 @@
                             <h2 class="animated2">
                                 <span>Creating A New Standard For Quality, Integrity & Reliability</span>
                             </h2>
-
-
                         </div>
                     </div>
                 </div><!--/ Carousel item end -->
                 <div class="item">
-                    <img class="img-responsive" src="~/images/banner1.png" alt="slider">
+                    <img class="img-responsive" src="~/images/banner2.png" alt="slider">
                     <div class="slider-content">
                         <div class="col-md-12">
                             <h2 class="animated4">
                                 <span>Creating A New Standard For Quality, Integrity & Reliability</span>
                             </h2>
-
-
                         </div>
                     </div>
                 </div><!--/ Carousel item end -->
                 <div class="item">
-                    <img class="img-responsive" src="~/images/banner1.png" alt="slider">
+                    <img class="img-responsive" src="~/images/banner3.png" alt="slider">
                     <div class="slider-content">
                         <div class="col-md-12">
                             <h2 class="animated7">
@@ -192,17 +200,7 @@
                     <h6><i class="fa telicon"></i> Tel : 001 (908) 222-1500    <span class="fax"><i class="fa faximg"></i> Fax : 001 (908) 222-1665</span></h6>
                 </div>
 
-                <div class="col-md-4 col-sm-4 wow 	bounce animated">
-                    <div class="input-group stylish-input-group">
-                        <input type="text" class="form-control search" placeholder="Search">
-                        <span class="input-group-addon">
-                            <button type="submit">
-                                <span class="glyphicon"></span>
-                            </button>
-                        </span>
-                    </div>
 
-                </div>
 
             </div>
         </div>
@@ -210,10 +208,21 @@
 
     <section id="service" class="wow fadeInUp">
         <div class="container">
-            <div class="row">
+            <div class="row aboutusmain">
+                <div class="col-lg-12 wow fadeInLeft animated"><h2 class="wellcome">Welcome to <span>RM METALS</span></h2></div>
                 <div class="col-md-3 col-sm-6 wow fadeInLeft animated">
+                    <img src="~/images/about.jpg" class="img-responsive">
+                </div>
+                <div class="col-md-9 col-sm-6 wow fadeInLeft animated">
+                    <p>RM Metals is a major participant in the stainless steel industry for over 30 years. We are part of a global market with stocking warehouses throughout the USA. We are very competitive , as well as reliable, due to our diversity. We specialize in the stainless steel sheet and coil market, as well as other stainless products. We are very committed to providing excellence in both service and quality. We look forward to assisting you.</p>
+
+
+                </div>
+            </div>
+            <div class="row" style="padding-top: 25px;">
+                <div class="col-md-4 col-sm-6 wow fadeInLeft animated">
                     <div class="servicemain">
-                        <div class="service-content">
+                        <div class="service-content last" style="height:180px;">
                             <h3>Inventory</h3>
                             <p>We stock stainless steel type 201, 301, 304/304L, 316/316L, 409, 430, and 439 in coil, sheet, and plate form. Besides these types, we can obtain other types and forms as per your specifications.</p>
 
@@ -223,24 +232,23 @@
                         </div>
                     </div>
                 </div><!--/ End first service -->
-                <div class="col-md-3 col-sm-6 wow fadeInLeft animated">
-                    <div class="servicemain">
-                        <div class="service-content">
+                @*<div class="col-md-3 col-sm-6 wow fadeInLeft animated">
+                        <div class="servicemain">
+                            <div class="service-content">
 
-                            <h4>Services</h4>
-                            <p>We stock stainless steel type 201, 301, 304/304L, 316/316L, 409, 430, and 439 in coil, sheet, and plate form. Besides these types, we can obtain other types and forms as per your specifications.</p>
+                                <h4>Services</h4>
+                                <p>We stock stainless steel type 201, 301, 304/304L, 316/316L, 409, 430, and 439 in coil, sheet, and plate form. Besides these types, we can obtain other types and forms as per your specifications.</p>
+                            </div>
+                            <div class="readmore1">
+                                @Html.ActionLink("Read More", "DataTables", "Home")
+                            </div>
                         </div>
-                        <div class="readmore1">
-                            @Html.ActionLink("Read More", "DataTables", "Home")
-                        </div>
-                    </div>
-                </div><!--/ End 2nd service -->
-                <div class="col-md-3 col-sm-6 wow fadeInLeft animated">
+                    </div>*@<!--/ End 2nd service -->
+                <div class="col-md-4 col-sm-6 wow fadeInLeft animated mininumheight">
                     <div class="servicemain">
-                        <div class="service-content">
-
-                            <h3>Local Distbibution</h3>
-                            <p>We stock stainless steel type 201, 301, 304/304L, 316/316L, 409, 430, and 439 in coil, sheet, and plate form. Besides these types, we can obtain other types and forms as per your specifications.</p>
+                        <div class="service-content last" style="height:180px;">
+                            <h3> Local Distribution</h3>
+                            <p>RM Metals is part of a global market with stocking warehouses throughout the USA. We have locations in NJ, PA, MD, GA, OH, IL, TX,and CA.  We offer stock and release programs that will help ensure consistency throughout any market conditions. We specialize in catering our services to the needs of each individual customer. We stock stainless steel type 201, 301, 304/304L, 316/316L, 409, 430, and 439 in coil, sheet, and plate form. Besides these types, we can obtain other types and forms as per your specifications.</p>
                         </div>
                         <div class="readmore">
                             @Html.ActionLink("Read More", "LocalDistribution", "Home")
@@ -248,16 +256,15 @@
 
                     </div>
                 </div><!--/ End 3rd service -->
-                <div class="col-md-3 col-sm-6 wow fadeInLeft animated">
+                <div class="col-md-4 col-sm-6 wow fadeInLeft animated mininumheight">
                     <div class="servicemain">
-                        <div class="service-content last">
-
-                            <h4>Export Sales</h4>
-                            <p>We stock stainless steel type 201, 301, 304/304L, 316/316L, 409, 430, and 439 in coil, sheet, and plate form. Besides these types, we can obtain other types and forms as per your specifications.</p>
+                        <div class="service-content last" style="height:180px;">
+                            <h3>Export Sales</h3>
+                            <p>RM Metals has a very long track record in exporting of secondary products and scrap.  We do all kinds of metals in usable and scrap form, as well as plastics.  Majority of our sourcing is from the United States and Canada.  Please send us your inquiry by email or telephone.</p>
                         </div>
 
-                        <div class="readmore1">
-                            <a href="#">Read More</a>
+                        <div class="readmore">
+                            <a href="http://www.rm-exports.com/">Read More</a>
                         </div>
                     </div>
                 </div><!--/ End 4th service -->
@@ -265,20 +272,6 @@
 
 
             <!---About us---->
-
-            <div class="row aboutusmain">
-                <div class="col-lg-12 wow fadeInLeft animated"><h2 class="wellcome">Welcome to <span>RM METALS</span></h2></div>
-                <div class="col-md-6 col-sm-6 wow fadeInLeft animated">
-                    <img src="~/images/about_us.png" class="img-responsive">
-                </div>
-                <div class="col-md-6 col-sm-6 wow fadeInLeft animated">
-                    <p>RM Metals, a division of RM Creation Inc., is headquatered in New Jersey and has been in existence for over 20 years. Over the years we have developed a solid reputation in the trading and distribution of stainless steel.</p>
-
-                    <p>Worldwide procurement of material allows us to give you a very competitive price. Our company thrives on respect, responsibility, and reputation.</p>
-                    <a href="#" class="readmore2">read more</a>
-                </div>
-            </div>
-
             <!---End About us---->
         </div>
     </section>
@@ -289,30 +282,31 @@
             <div class="row">
 
                 <div class="col-md-6 col-sm-12">
-                    <h2 class="wellcome">Certifications</h2>
+                    <h2 class="wellcome">Testimonials</h2>
                     <div id="tcb-testimonial-carousel" class="carousel slide" data-ride="carousel">
                         <!-- Indicators -->
                         <ol class="carousel-indicators tesimonialsradios">
                             <li data-target="#tcb-testimonial-carousel" data-slide-to="0" class="active"></li>
                             <li data-target="#tcb-testimonial-carousel" data-slide-to="1"></li>
                             <li data-target="#tcb-testimonial-carousel" data-slide-to="2"></li>
+                            <li data-target="#tcb-testimonial-carousel" data-slide-to="3"></li>
                         </ol>
                         <!-- Wrapper for slides -->
-                        <div class="carousel-inner">
+                        <div class="carousel-inner" style="height:150px;">
                             <div class="item active">
                                 <div class="row">
                                     <div class="col-xs-12 col-sm-12 wow fadeInLeft animated">
                                         <figure class="clearfix">
-                                            <div class="col-md-3 col-sm-3 col-xs-12"><img class="img-responsive media-object" src="~/images/testimonials_man.png"> </div>
+                                            <div class="col-md-3 col-sm-3 col-xs-12"><img class="img-responsive media-object" src="~/images/PA.png"> </div>
                                             <div class="col-md-9 col-sm-9 col-xs-12">
                                                 <p>
-                                                    RM Metals, a division of RM Creation Inc., is headquatered in New Jersey and has been in existence for over 20 years. Over the years we have developed a solid reputation in the trading and distribution of stainless steel.
+                                                    It's an absolute pleasure to deal with the people at RM Metals. Their philosophy in building long term relationships with their suppliers is positively refreshing. They are always fair and continue to implement a strong foundation of business built on constant communication. RM Metals is truly one of the finest.
 
                                                 </p>
-                                                <p>Worldwide procurement of material allows us to give you a very competitive price. Our company thrives on respect, responsibility, and reputation.</p>
+                                                @*<p>Worldwide procurement of material allows us to give you a very competitive price. Our company thrives on respect, responsibility, and reputation.</p>*@
 
                                                 <blockquote class="no-margin">
-                                                    <p>NAEME HERE : DESIGNATION HERE</p>
+                                                    <p>SUPPLIER - PA</p>
                                                 </blockquote>
 
                                             </div>
@@ -324,17 +318,17 @@
                                 <div class="row">
                                     <div class="col-xs-12 col-sm-12 wow fadeInLeft animated">
                                         <figure class="clearfix">
-                                            <div class="col-md-3 col-sm-3 col-xs-12"><img class="img-responsive media-object" src="~/images/testimonials_man.png"> </div>
+                                            <div class="col-md-3 col-sm-3 col-xs-12"><img class="img-responsive media-object" src="~/images/GA.png"> </div>
                                             <div class="col-md-9 col-sm-9 col-xs-12">
 
                                                 <p>
-                                                    RM Metals, a division of RM Creation Inc., is headquatered in New Jersey and has been in existence for over 20 years. Over the years we have developed a solid reputation in the trading and distribution of stainless steel.
+                                                    We have been looking for a supplier that is a constant fixture during these challenging times. It is so rewarding to know that we have a supplier willing to accommodate our needs through any market conditions. Working with RM Metals, we have finally found that partnership. Job well done and we look forward in working together through the years to come.
 
                                                 </p>
-                                                <p>Worldwide procurement of material allows us to give you a very competitive price. Our company thrives on respect, responsibility, and reputation.</p>
+                                                @*<p>Worldwide procurement of material allows us to give you a very competitive price. Our company thrives on respect, responsibility, and reputation.</p>*@
 
                                                 <blockquote class="no-margin">
-                                                    <p>NAEME HERE : DESIGNATION HERE</p>
+                                                    <p>CUSTOMER - GA</p>
                                                 </blockquote>
 
                                             </div>
@@ -346,17 +340,37 @@
                                 <div class="row">
                                     <div class="col-xs-12 col-sm-12 wow fadeInLeft animated">
                                         <figure class="clearfix">
-                                            <div class="col-md-3 col-sm-3 col-xs-12"><img class="img-responsive media-object" src="~/images/testimonials_man.png"> </div>
+                                            <div class="col-md-3 col-sm-3 col-xs-12">
+                                                <img class="img-responsive media-object" src="~/images/IL.png">
+                                            </div>
                                             <div class="col-md-9 col-sm-9 col-xs-12">
 
                                                 <p>
-                                                    RM Metals, a division of RM Creation Inc., is headquatered in New Jersey and has been in existence for over 20 years. Over the years we have developed a solid reputation in the trading and distribution of stainless steel.
+                                                    These guys are great to work with and they pay on time! I hope to continue business with them. Also, there is always a person at the other end, not an answering machine.
 
                                                 </p>
-                                                <p>Worldwide procurement of material allows us to give you a very competitive price. Our company thrives on respect, responsibility, and reputation.</p>
+                                                @*<p>Worldwide procurement of material allows us to give you a very competitive price. Our company thrives on respect, responsibility, and reputation.</p>*@
 
                                                 <blockquote class="no-margin">
-                                                    <p>NAEME HERE : DESIGNATION HERE</p>
+                                                    <p>Supplier - IL</p>
+                                                </blockquote>
+                                            </div>
+                                        </figure>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="item">
+                                <div class="row">
+                                    <div class="col-xs-12 col-sm-12 wow fadeInLeft animated">
+                                        <figure class="clearfix">
+                                            <div class="col-md-3 col-sm-3 col-xs-12"><img class="img-responsive media-object" src="~/images/TX.png"> </div>
+                                            <div class="col-md-9 col-sm-9 col-xs-12">
+                                                <p>
+                                                    Our company buys stainless steel in flat rolled sheets and coils.  We been in existence since 1965.  RM has been fair with us even when things have got tough!  Overall, a positive experience.
+                                                </p>
+                                                @*<p>Worldwide procurement of material allows us to give you a very competitive price. Our company thrives on respect, responsibility, and reputation.</p>*@
+                                                <blockquote class="no-margin">
+                                                    <p>Customer - TX</p>
                                                 </blockquote>
                                             </div>
                                         </figure>
@@ -364,21 +378,15 @@
                                 </div>
                             </div>
                         </div>
-
                     </div>
                 </div>
-
-
                 <div class="col-md-6 col-sm-12">
-                    <h2 class="wellcome">Loction</h2>
+                    <h2 class="wellcome">Corporate Location</h2>
                     <img src="~/images/map.png" class="img-responsive">
                 </div>
-
-
             </div>
         </div>
     </section>
-
     <section id="footer-wrapper">
         <!-- Footer top start -->
         <footer id="footer">
@@ -387,53 +395,33 @@
                     <div class="col-md-3 col-sm-3 wow fadeInRight animated">
                         <div class="quicklinks">
                             <h3 class="footer-title">Quick Links</h3>
-
-
                             <ul>
                                 <li>@Html.ActionLink("Home", "Index", "Home")</li>
                                 <li>@Html.ActionLink("LOCAL DISTRIBUTION", "LOCALDISTRIBUTION", "Home")</li>
-                                <li><a href="#">EXPORT SALES   </a></li>
+                                <li><a href="http://www.rm-exports.com/">EXPORT SALES   </a></li>
                                 <li>@Html.ActionLink("INVENTORY", "Index", "INVENTORY")</li>
                                 <li>@Html.ActionLink("DATA TABLES", "DATATABLES", "Home")</li>
                                 <li>@Html.ActionLink("POLICIES", "POLICIES", "Home")</li>
                             </ul>
-
-
-
                         </div>
                     </div><!--/ end about us -->
-
-                    @*<div class="col-md-3 col-sm-3 wow fadeInRight animated">
-                        <div class="quicklinks">
-                            <h3 class="footer-title">Quick Links</h3>
-                            <ul>
-                                <li><a href="#">HOME </a></li>
-                                <li><a href="#">LOCAL DISTRIBUTION</a></li>
-                                <li><a href="#">EXPORT SALES   </a></li>
-                                <li><a href="#">INVENTORY</a></li>
-                                <li><a href="#">DATA TABLES   </a></li>
-                                <li><a href="#">POLICIES   </a></li>
-                            </ul>
-                        </div>
-                    </div>*@<!--/ end recent post -->
-
                     <div class="col-md-3 col-sm-3 wow fadeInRight animated">
-
                         <h3 class="footer-title">contact Us</h3>
                         <div class="contactaddress">
-
                             <address>
                                 <ul class="list-unstyled">
                                     <li class="footer-sprite address">
                                         50 Cragwood Road, Suite 308<br>
-                                        South Plainfield, NJ 07080<br>
-                                        USA<br>
+                                        South Plainfield, NJ 07080, USA<br>
                                     </li>
                                     <li class="footer-sprite phone">
                                         Tel : 001 (908) 222-1500
                                     </li>
+                                    <li>
+                                        <span class="fax"><i class="fa faximg" style="width:28px;"></i> Fax : 001 (908) 222-1665</span>
+                                    </li>
                                     <li class="footer-sprite email">
-                                        <a href="mailto: rmmetals@gmail.com"> rmmetals@gmail.com</a>
+                                        <a href="mailto: rmmetals@gmail.com"> sam@rm-metals.com</a>
                                     </li>
                                 </ul>
                             </address>
@@ -446,22 +434,11 @@
                         <div class="footer-icons">
                             <h3 class="footer-title">Follow Us</h3>
                             <p class="footer-social">
-                                <a href="#"><i class="fa fa-twitter"></i></a>
-                                <a href="#"><i class="fa fa-facebook"></i></a>
-                                <a href="#"><i class="fa fa-linkedin"></i></a>
-                                <a href="#"><i class="fa fa-skype"></i></a>
-                                <a href="#"><i class="fa fa-comments"></i></a>
-
+                                <a href="https://twitter.com/RM_Metals" target="_blank"><i class="fa fa-twitter"></i></a>
+                                <a href="https://www.facebook.com/profile.php?id=100054251348160" target="_blank"><i class="fa fa-facebook"></i></a>
+                                <a href="https://www.linkedin.com/company/rm-metals" target="_blank"><i class="fa fa-linkedin"></i></a>
                             </p>
-                            <div class="newsletter">
-                                <h4>Newsletter subscription</h4>
-                                <form role="form">
-                                    <div class="form-group">
-                                        <input type="email" class="form-control emailform" id="email" value="E-mail">
-                                    </div>
-                                </form>
-                                <button type="button" class="btn btn-primary submitbutton">Submit</button>
-                            </div>
+
                         </div>
                     </div><!--/ end tweet -->
 
@@ -477,6 +454,7 @@
                     <div class="col-md-12 wow fadeInRight animated" style="visibility: visible;">
                         <div class="copyright-info">
                             <span> Rights Reserved, RM METALS 2011-2016  Copyright</span>
+                            &nbsp;|&nbsp; <span><a href="http://www.thealmit.com/">Powered By almIT Services Inc.,</a></span>
                         </div>
                     </div>
                 </div><!-- Row end -->
@@ -487,7 +465,7 @@
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <script src="~/js/bootstrap.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
     <!-- Owl Carousel -->
     <script type="text/javascript" src="~/js/owl.carousel.js"></script>
     <!-- SmoothScroll -->
