@@ -1,0 +1,84 @@
+﻿@model  RM.Models.BlogPost
+@{
+    ViewBag.Title = "Create";
+}
+
+<script src="~/Scripts/tinymce/tinymce.min.js"></script>
+<script>
+    tinymce.init({
+        selector: '#mytextarea',
+        plugins: [
+            'advlist', 'autolink', 'link', 'image', 'lists', 'charmap', 'preview', 'anchor', 'pagebreak',
+            'searchreplace', 'wordcount', 'visualblocks', 'visualchars', 'code', 'fullscreen', 'insertdatetime',
+            'media', 'table', 'emoticons', 'template', 'help'
+        ],
+        toolbar: 'undo redo | styles | bold italic | alignleft aligncenter alignright alignjustify | ' +
+            'bullist numlist outdent indent | link image | print preview media fullscreen | ' +
+            'forecolor backcolor emoticons | help',
+        menu: {
+            favs: { title: 'My Favorites', items: 'code visualaid | searchreplace | emoticons' }
+        },
+        menubar: 'favs file edit view insert format tools table help'
+    });
+
+    //tinymce.init({
+    //    selector: '#mytextarea',
+    //    height: 500,
+    //    menubar: false,
+    //    plugins: [
+    //        'advlist autolink lists link image charmap print preview anchor',
+    //        'searchreplace visualblocks code fullscreen',
+    //        'insertdatetime media table paste code help wordcount'
+    //    ],
+    //    toolbar: 'undo redo | formatselect | ' +
+    //        'bold italic backcolor | alignleft aligncenter ' +
+    //        'alignright alignjustify | bullist numlist outdent indent | ' +
+    //        'removeformat | help',
+    //    content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
+    //});
+
+
+</script>
+<style>
+    .tox-promotion {
+        display: none !important;
+    }
+
+    .tox-statusbar__branding {
+        display: none !important;
+    }
+</style>
+
+<h2>New Post</h2>
+@using (Html.BeginForm("Create", "Blog", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+    @Html.AntiForgeryToken()
+    <form id="loginform" class="form-horizontal" role="form">
+
+        <div style="margin-bottom: 25px">
+            @*<span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>*@
+
+            @Html.TextBoxFor(m => m.Title, new { @class = "form-control", @placeholder = "Title" })
+            @Html.ValidationMessageFor(m => m.Title, "", new { @class = "text-danger" })
+
+        </div>
+
+
+        <div style="margin-bottom: 25px">
+            @*<span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>*@
+            @*<textarea id="mytextarea">Hello, World!</textarea>*@
+            @Html.TextAreaFor(model => model.Body, new { id = "mytextarea", placeholder = "Post Details", required = "" })
+        </div>
+
+        <div style="margin-top: 10px;margin-left: 1px;" class="form-group">
+            <!-- Button -->
+
+            <div class="col-sm-12 controls">
+                <input type="submit" value="Submit" class="btn btn-success" />
+
+                @*<a id="btn-fblogin" href="#" class="btn btn-primary">Login with Facebook</a>*@
+            </div>
+
+        </div>
+    </form>
+}

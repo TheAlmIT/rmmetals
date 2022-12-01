@@ -13,35 +13,47 @@ namespace RM.Controllers
 {
     public class HomeController : Controller
     {
-       
-            public ActionResult Index()
-            {
 
-                return View();
-            }
-            public ActionResult Policies()
-            {
+        public ActionResult Index()
+        {
 
-                return View();
-            }
+            return View();
+        }
+        public ActionResult Policies()
+        {
 
-            public ActionResult DataTables()
-            {
+            return View();
+        }
 
-                return View();
-            }
+        public ActionResult DataTables()
+        {
+
+            return View();
+        }
 
 
-            public ActionResult LocalDistribution()
-            {
+        public ActionResult LocalDistribution()
+        {
 
-                return View();
-            }
+            return View();
+        }
 
-            public ActionResult ExportSales()
-            {
+        public ActionResult ExportSales()
+        {
 
-                return View();
-            }
+            return View();
+        }
+        public ActionResult Chat()
+        {
+            return View();
+        }
+        public ActionResult PrivateChat()
+        {
+            return View();
+        }
+        public ActionResult NewPost()
+        {
+            return View();
         }
     }
+}
