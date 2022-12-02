@@ -16,16 +16,18 @@ namespace RM.Models
     {
         public int PostId { get; set; }
         public string Title { get; set; }
-        public string Body { get; set; }       
+        // This attributes allows your HTML Content to be sent up  
+        [AllowHtml]
+        public string Body { get; set; }
         public string PostAuthor { get; set; }
         public string CreatedBy { get; set; }
         public DateTime CreatedOn { get; set; }
         public string ModifiedBy { get; set; }
-        public DateTime ModifiedOn { get; set; }
+        public DateTime? ModifiedOn { get; set; }
         public Boolean IsActive { get; set; }
         public IPagedList<BlogPost> IPagedBlogPostList { get; set; }
 
-        public void insert(BlogPost post)
+        public void insert()
         {
 
             string cs = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
@@ -68,14 +70,16 @@ namespace RM.Models
                 {
                     BlogPost post = new BlogPost();
                     post.PostId = Convert.ToInt32(rdr["PostId"]);
-                    post.Title =Convert.ToString(rdr["Title"]);
+                    post.Title = Convert.ToString(rdr["Title"]);
                     post.Body = Convert.ToString(rdr["Body"]);
                     post.PostAuthor = Convert.ToString(rdr["PostAuthor"]);
                     post.IsActive = Convert.ToBoolean(rdr["IsActive"]);
                     post.CreatedBy = Convert.ToString(rdr["CreatedBy"]);
                     post.CreatedOn = Convert.ToDateTime(rdr["CreatedOn"]);
                     post.ModifiedBy = Convert.ToString(rdr["ModifiedBy"]);
-                    post.ModifiedOn = Convert.ToDateTime(rdr["ModifiedOn"]);
+                    if (rdr["ModifiedOn"] != null && rdr["ModifiedOn"] != DBNull.Value)
+                        post.ModifiedOn = Convert.ToDateTime(rdr["ModifiedOn"]);
+
                     posts.Add(post);
                 }
             }

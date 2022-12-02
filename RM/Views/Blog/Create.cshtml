@@ -6,7 +6,7 @@
 <script src="~/Scripts/tinymce/tinymce.min.js"></script>
 <script>
     tinymce.init({
-        selector: '#mytextarea',
+        selector: '#Body',
         plugins: [
             'advlist', 'autolink', 'link', 'image', 'lists', 'charmap', 'preview', 'anchor', 'pagebreak',
             'searchreplace', 'wordcount', 'visualblocks', 'visualchars', 'code', 'fullscreen', 'insertdatetime',
@@ -50,35 +50,30 @@
 </style>
 
 <h2>New Post</h2>
-@using (Html.BeginForm("Create", "Blog", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+@using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    <form id="loginform" class="form-horizontal" role="form">
+    <div style="margin-bottom: 25px">
+        @*<span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>*@
 
-        <div style="margin-bottom: 25px">
-            @*<span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>*@
+        @Html.TextBoxFor(m => m.Title, new { @class = "form-control", @placeholder = "Title" })
+        @Html.ValidationMessageFor(m => m.Title, "", new { @class = "text-danger" })
 
-            @Html.TextBoxFor(m => m.Title, new { @class = "form-control", @placeholder = "Title" })
-            @Html.ValidationMessageFor(m => m.Title, "", new { @class = "text-danger" })
+    </div>
+    <div style="margin-bottom: 25px">
+        <!-- This will contain your HtmlContent and use the TinyMCE editor-->
+        @Html.TextAreaFor(model => model.Body)
 
-        </div>
+    </div>
+    <div style="margin-top: 10px;margin-left: 1px;" class="form-group">
+        <!-- Button -->
 
-
-        <div style="margin-bottom: 25px">
-            @*<span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>*@
-            @*<textarea id="mytextarea">Hello, World!</textarea>*@
-            @Html.TextAreaFor(model => model.Body, new { id = "mytextarea", placeholder = "Post Details", required = "" })
-        </div>
-
-        <div style="margin-top: 10px;margin-left: 1px;" class="form-group">
-            <!-- Button -->
-
-            <div class="col-sm-12 controls">
-                <input type="submit" value="Submit" class="btn btn-success" />
-
-                @*<a id="btn-fblogin" href="#" class="btn btn-primary">Login with Facebook</a>*@
-            </div>
+        <div class="col-sm-12 controls">
+            <input type="submit" value="Create" class="btn btn-success" />
 
         </div>
-    </form>
+
+    </div>
+    <span>@ViewBag.errorMessage</span>
 }
+
