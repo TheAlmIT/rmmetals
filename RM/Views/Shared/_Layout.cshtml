@@ -75,7 +75,7 @@
     </style>
 
 </head>
-<body >
+<body>
     <!-- Header start -->
     <header id="header" class="navbar-fixed-top main-nav" role="banner">
         <div class="container" style='background-image:url(../../images/BannerBacknew.jpg); background-repeat:repeat-x'>
@@ -96,10 +96,10 @@
                                     <i class="fa fa-linkedin"></i>
                                 </a>
                                 <!--   <a id="tooltip4" href="#" data-toggle="tooltip" data-placement="top" title="Dribble">
-        <i class="fa fa-skype"></i>
-    </a>
-     <a id="tooltip2" data-toggle="tooltip" data-placement="top" title="Googlehangout" href="#">
-        <i class="fa fa-comments"></i></a>-->
+                                    <i class="fa fa-skype"></i>
+                                </a>
+                                 <a id="tooltip2" data-toggle="tooltip" data-placement="top" title="Googlehangout" href="#">
+                                    <i class="fa fa-comments"></i></a>-->
 
 
                             </li><!-- Social links end-->
@@ -126,7 +126,8 @@
                                 @Html.ActionLink("Home", "Index", "Home")
                             </li>
                             <li id="Inventory" class="dropdown  @((ViewBag.PageName == "Inventory") ? "active" : "")">
-                            @Html.ActionLink("Inventory", "Index", "Inventory")</li>
+                                @Html.ActionLink("Inventory", "Index", "Inventory")
+                            </li>
 
                             @if (Request.IsAuthenticated)
                             {
@@ -134,7 +135,7 @@
                                 if (User.IsInRole("Admin"))
                                 {
                                     <li id="Admin" class="dropdown @((ViewBag.PageName == "Admin") ? "active" : "")">
-                                        <a class="dropdown-toggle" data-toggle="dropdown" >Admin</a>
+                                        <a class="dropdown-toggle" data-toggle="dropdown">Admin</a>
                                         <ul class="dropdown-menu">
                                             <li>@Html.ActionLink("Report", "Index", "Report")</li>
                                             <li>@Html.ActionLink("UpLoad Inventory", "Create", "Inventory")</li>
@@ -175,6 +176,8 @@
                 <div class="row" style="background: rgb(221, 221, 221);min-height:350px;">
                     @RenderBody()
                 </div>
+
+
             </div>
         </section>
         <section id="footer-wrapper">
@@ -240,7 +243,7 @@
 
                                     <a href="https://www.linkedin.com/company/rm-metals" target="_blank"><i class="fa fa-linkedin"></i></a>
                                     @* <a href="#"><i class="fa fa-skype"></i></a>
-        <a href="#"><i class="fa fa-comments"></i></a>*@
+                                        <a href="#"><i class="fa fa-comments"></i></a>*@
 
                                 </p>
 
@@ -264,7 +267,11 @@
 
         </section>
     </section>
-
+    <section id="chat-wrapper">
+        <div class="chatcontainer">
+            @Html.Partial("_PrivateChat")
+        </div>
+    </section>
 
 </body>
 </html>

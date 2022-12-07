@@ -34,7 +34,7 @@ namespace RM
                     request.ContactNumber = contactNumber;
                     request.Notes = notes;
                     request.CreatedBy = "System";
-                    request.insert(request);
+                    //request.insert(request);
                 }
                 else
                 {
@@ -70,10 +70,10 @@ namespace RM
 
             if (toUser != null && fromUser != null)
             {
-                if (toUser.IsAdmin)
-                {
-                    toUser.IsFreeFlag = false;
-                }
+                //if (toUser.IsAdmin)
+                //{
+                //    toUser.IsFreeFlag = false;
+                //}
                 // send to 
                 Clients.Client(toUserId).sendPrivateMessage(fromUserId, fromUser.UserName, message);
                 //Clients.Client(toUserId).sendPrivateMessage(fromUserId, "Admin", message);

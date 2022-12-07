@@ -50,7 +50,7 @@
 <body style="background: #dddddd;">
     <!-- Header start -->
     <header id="header" class="navbar-fixed-top main-nav" role="banner">
-        <div class="container" >
+        <div class="container">
             <div class="row">
                 <div class="col-md-12 heade_bg">
                     <!--/ Top info start  style='background-image:url(../../images/BannerBacknew.jpg); background-repeat:repeat-x'-->
@@ -68,11 +68,11 @@
                                     <i class="fa fa-linkedin"></i>
                                 </a>
                                 @* <a id="tooltip4" href="#" data-toggle="tooltip" data-placement="top" title="Dribble">
-            <i class="fa fa-skype"></i>
-        </a>
-        <a id="tooltip2" data-toggle="tooltip" data-placement="top" title="Facebook" href="#">
-            <i class="fa fa-comments"></i>
-        </a>*@
+                                        <i class="fa fa-skype"></i>
+                                    </a>
+                                    <a id="tooltip2" data-toggle="tooltip" data-placement="top" title="Facebook" href="#">
+                                        <i class="fa fa-comments"></i>
+                                    </a>*@
                             </li><!-- Social links end-->
                             @Html.Partial("_LoginPartial")
 
@@ -385,6 +385,7 @@
             </div>
         </div>
     </section>
+
     <section id="footer-wrapper">
         <!-- Footer top start -->
         <footer id="footer">
@@ -436,7 +437,7 @@
                                 <a href="https://twitter.com/RM_Metals" target="_blank"><i class="fa fa-twitter"></i></a>
                                 <a href="https://www.linkedin.com/company/rm-metals" target="_blank"><i class="fa fa-linkedin"></i></a>
                                 @*  <a href="#"><i class="fa fa-skype"></i></a>
-        <a href="#"><i class="fa fa-comments"></i></a>*@
+                                    <a href="#"><i class="fa fa-comments"></i></a>*@
                             </p>
 
                         </div>
@@ -473,6 +474,10 @@
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
     @*@RenderSection("scripts", required: false)*@
-
+    <section id="chat-wrapper">
+        <div class="chatcontainer">
+            @Html.Partial("_PrivateChat")
+        </div>
+    </section>
 </body>
 </html>
