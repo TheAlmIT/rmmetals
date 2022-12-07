@@ -5,8 +5,6 @@
 <link href="~/css/JQueryUI/themes/base/jquery.ui.all.css" rel="stylesheet" />
 
 
-@section scripts {
-
     <!--Script references. -->
     <!--Reference the jQuery library. -->
     @*<script src="~/Scripts/jquery-1.10.2.min.js"></script>*@
@@ -49,13 +47,14 @@
         });
 
         function setScreen(isLogin, chatHub) {
-            if ('@Session["IsAdmin"]' == 'true' && !isLogin) {
+
+            if ('@User.IsInRole("Admin")' == 'True' && !isLogin) {
 
                 $("#divChat").show();
                 $("#divLogin").hide();
                 if (chatHub!=undefined)
                 @*chatHub.server.connect('@Session["UserName"]', '', '','@Session["IsAdmin"]');*@
-                chatHub.server.connect('@Session["UserName"]', '', '','','@Session["IsAdmin"]');
+                chatHub.server.connect('Admin', '', '','','@User.IsInRole("Admin")');
             }
             else {
             if (!isLogin) {
@@ -74,12 +73,12 @@
         function registerEvents(chatHub) {
 
             $("#btnStartChat").click(function () {
-               
+
                 var name = $("#txtNickName").val();
                 var email = $("#txtEmail").val();
                 var contact = $("#txtContactNumber").val();
                 var notes = $("#txtNotes").val();
-        
+
                 //if (name.length > 0 && email.length > 0 && contact.length > 0) {
                 if (name.length > 0) {
                     chatHub.server.connect(name, email, contact,notes,'');
@@ -128,9 +127,10 @@
                 $('#hdId').val(id);
                 $('#hdUserName').val(userName);
                 $('#spanUser').html(userName);
-              
+
                 // Add All Users
-                var isAdminUser = allUsers.find(q => q.IsAdmin === true && q.IsFreeFlag === true);
+                //var isAdminUser = allUsers.find(q => q.IsAdmin === true && q.IsFreeFlag === true);
+                var isAdminUser = allUsers.find(q => q.IsAdmin === true );
                 //for (i = 0; i < allUsers.length; i++) {
 
                 //    AddUser(chatHub, allUsers[i].ConnectionId, allUsers[i].UserName);
@@ -243,7 +243,7 @@
         }
 
         function OpenPrivateChatWindow(chatHub, id, userName) {
-        
+
             var ctrId = 'private_' + id;
 
             if ($('#' + ctrId).length > 0) return;
@@ -322,10 +322,10 @@
         }
 
     </script>
-}
+
 <section id="service" class="wow fadeInUp">
     <div id="header" style="display:none">
-      
+
     </div>
     <div class="container" id="divContainer" style="float: right;overflow: hidden;">
         <div id="divLogin">
@@ -400,7 +400,7 @@
                 </div>
                 <div id="divusers" class="users" style="display:none">
                 </div>
-               <span id="errorMessage"></span>
+                <span id="errorMessage"></span>
             </div>
             <div class="messageBar" style="display:none;">
                 <input class="textbox" type="text" id="txtMessage" />

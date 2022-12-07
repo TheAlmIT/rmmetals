@@ -1,4 +1,5 @@
-﻿using System.Data.Entity;
+﻿using System.ComponentModel;
+using System.Data.Entity;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
@@ -13,6 +14,7 @@ namespace RM.Models
 
         public string Name { get; set; }
         public string PhoneNumber2 { get; set; }
+        [DisplayName("Company Name")]
         public string CompanyName { get; set; }
         public string Address { get; set; }
         public string Address2 { get; set; }
@@ -20,8 +22,11 @@ namespace RM.Models
         public string City { get; set; }
         public string State { get; set; }
         public string Zip { get; set; }
+        [DisplayName("Company Email")]
         public string CompanyEmail { get; set; }
         public string Fax { get; set; }
+
+        public bool Approved { get; set; }
 
 
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)

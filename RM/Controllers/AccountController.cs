@@ -78,6 +78,20 @@ namespace RM.Controllers
             // To enable password failures to trigger account lockout, change to shouldLockout: true
             var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
             
+            if(result == SignInStatus.Success)
+            {
+                var user = await UserManager.FindByEmailAsync(model.Email);                
+                if(user.Approved == false)
+                {
+                    AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
+                    ModelState.AddModelError("Email", "Please wait for Admin Approval");                    
+                    result = SignInStatus.Failure;
+                    return View(model);
+                } 
+                            
+            }
+           
+
             switch (result)
             {
                 case SignInStatus.Success:
@@ -87,8 +101,8 @@ namespace RM.Controllers
                         NewUser.IPAddress = Request.ServerVariables["REMOTE_ADDR"];
                         NewUser.user_Id = user.Id;
                         NewUser.insert(NewUser);
-                    Session["IsAdmin"] = "true";
-                    Session["UserName"] = user.Name;
+                    //Session["IsAdmin"] = "true";
+                    //Session["UserName"] = user.Name;
                     return RedirectToLocal(returnUrl);
                 case SignInStatus.LockedOut:
                     return View("Lockout");
@@ -145,8 +159,7 @@ namespace RM.Controllers
             }
         }
 
-        //
-        // GET: /Account/Register
+        //GET: /Account/Register
         [AllowAnonymous]
         public ActionResult Register()
         {
@@ -158,7 +171,7 @@ namespace RM.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Register(RegisterViewModel model)
+        public async Task<ActionResult> RegisterUser(RegisterViewModel model)
         {
             if (ModelState.IsValid)
             {
@@ -167,29 +180,66 @@ namespace RM.Controllers
                     CompanyEmail = model.CompanyEmail ,CompanyName=model.CompanyName,Address = model.Address,
                     Address2 = model.Address2,
                     City =model.City, State=model.State,Zip=model.Zip,Fax=model.Fax};
-                var result = await UserManager.CreateAsync(user, model.Password);
-                if (result.Succeeded)
+
+                ApplicationUser au  = await UserManager.FindByEmailAsync(user.UserName) ;
+                if(au != null)
                 {
-                    await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
-                   
-                    UserTracking NewUser = new UserTracking();
-                    NewUser.IPAddress = Request.ServerVariables["REMOTE_ADDR"];
-                    NewUser.user_Id = user.Id;
-                    NewUser.insert(NewUser);
-
-                    // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771
-                    // Send an email with this link
-                    // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
-                    // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-                    // await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
-
-                    return RedirectToAction("Index", "Home");
+                    ModelState.AddModelError("Email", "Username Already Registered.");
                 }
-                AddErrors(result);
+                if (ModelState.IsValid)
+                {
+
+                    //var result = await UserManager.CreateAsync(user, model.Password);
+                    var result = UserManager.Create(user, model.Password);
+
+                    if (result.Succeeded)
+                    {
+                        //await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
+
+                        UserTracking newUser = new UserTracking();
+                        newUser.IPAddress = Request.ServerVariables["REMOTE_ADDR"];
+                        newUser.user_Id = user.Id;
+                        newUser.insert(newUser);
+                        try
+                        {
+                            var smtpClient = new SmtpClient();
+                            string fromEmailId = System.Configuration.ConfigurationManager.AppSettings["SystemEmailId"];
+
+                            var message = new MailMessage(fromEmailId, user.Email)
+                            {
+                                Subject = "Registration is waiting for Admin Approval",
+                                Body =
+                                    "Hello " + user.Name + Environment.NewLine +
+                                    "Your registration is waiting for Admin Approval. Please wait for approval email, to log into website."
+
+                            };
+                            smtpClient.Send(message);
+                        }
+                        catch (Exception ex)
+                        {
+                            Response.Write("There was an error sending mail. Exception: " + ex.Message);
+                        }
+
+                        // Send an email with this link
+                        // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
+                        // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
+                        // await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
+
+                        return RedirectToAction("Login");
+                    }
+
+                    AddErrors(result);
+                }
+            }
+            else
+            {
+                throw new Exception("Model is not valid");
             }
 
+            return View("Register", model);
+
             // If we got this far, something failed, redisplay form
-            return View(model);
+            //return RedirectToAction("Register");
         }
 
         //
@@ -222,32 +272,30 @@ namespace RM.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = await UserManager.FindByNameAsync(model.Email);
-                if (user == null || !(await UserManager.IsEmailConfirmedAsync(user.Id)))
+                //var user = await UserManager.FindByNameAsync(model.Email);
+                var user = UserManager.FindByEmail(model.Email);
+                if (user != null)
                 {
-                    // Don't reveal that the user does not exist or is not confirmed
+                    // Send an email with this link
+                    string code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
+                    var callbackUrl = Url.Action("ResetPassword", "Account", new {userId = user.Id, code = code},
+                        protocol: Request.Url.Scheme);
+
+
+                    var smtpClient = new SmtpClient();
+                    string fromEmailId = System.Configuration.ConfigurationManager.AppSettings["SystemEmailId"];
+                    smtpClient.DeliveryFormat = SmtpDeliveryFormat.International;
+                    var message = new MailMessage(fromEmailId, model.Email);
+
+                    message.Subject = "Password Reset";
+                    message.Body =
+                        string.Format("Hi {0}{1}, Please reset your password by clicking <a href=\"{2}\">here</a>",
+                            user.Name, Environment.NewLine, callbackUrl);
+                    message.IsBodyHtml = true;
+                    smtpClient.Send(message);
                     return View("ForgotPasswordConfirmation");
                 }
-
-                // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771
-                // Send an email with this link
-                 string code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
-                var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-
-                var smtpClient = new SmtpClient();
-                string fromEmailId = System.Configuration.ConfigurationManager.AppSettings["SystemEmailId"];
-                var message = new MailMessage(fromEmailId, model.Email)
-                {
-                    Subject = "Password Reset",
-                    Body = "Hi " + User.Identity.GetUserName() + Environment.NewLine + "Click the link Below to Reset your Password"+callbackUrl
-
-                };
-                smtpClient.Send(message);
-                // await UserManager.SendEmailAsync(user.Id, "Reset Password", "Please reset your password by clicking <a href=\"" + callbackUrl + "\">here</a>");
-                // return RedirectToAction("ForgotPasswordConfirmation", "Account");
             }
-
-            // If we got this far, something failed, redisplay form
             return View(model);
         }
 
@@ -308,17 +356,10 @@ namespace RM.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult ExternalLogin(string provider, string returnUrl)
         {
-            //if (string.IsNullOrEmpty(returnUrl))
-            //{
-            //    returnUrl= Url.Content("~/");
-            //}
-            // https://stackoverflow.com/questions/20737578/asp-net-sessionid-owin-cookies-do-not-send-to-browser
-            //Session["Workaround"] = 0;
-            //Session["salt"] = "salt";
             // Request a redirect to the external login provider
             return new ChallengeResult(provider, Url.Action("ExternalLoginCallback", "Account", new { ReturnUrl = returnUrl }));
         }
-      
+
         //
         // GET: /Account/SendCode
         [AllowAnonymous]

@@ -1,0 +1,100 @@
+﻿@model IEnumerable<RM.Models.RegisterViewModel>
+
+@{
+    ViewBag.Title = "DisApproval";
+}
+<style>
+    .table-striped > tbody > tr:nth-child(odd) > td, .table-striped > tbody > tr:nth-child(odd) > th {
+        background: rgb(180,180,180);
+    }
+</style>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="form-horizontal">
+        <div class="col-md-12 col-sm-12 ">
+            <h2>Active Users</h2>
+            <div class="table-responsive mininumheight">
+                <table class="col-md-12 table-bordered table-striped table-condensed cf">
+                    <thead class="cf">
+                        <tr>
+                            <th class="numeric"></th>
+                            <th class="numeric">
+                                @Html.DisplayNameFor(model => model.Name)
+                            </th>
+                            <th class="numeric">
+                                @Html.DisplayNameFor(model => model.Email)
+                            </th>
+                            <th class="numeric">
+                                @Html.DisplayNameFor(model => model.PhoneNumber)
+                            </th>
+                            <th class="numeric">
+                                @Html.DisplayNameFor(model => model.CompanyName)
+                            </th>
+                            <th class="numeric">
+                                @Html.DisplayNameFor(model => model.Address)
+                            </th>
+                            <th class="numeric">
+                                @Html.DisplayNameFor(model => model.Address2)
+                            </th>
+                            <th class="numeric">
+                                @Html.DisplayNameFor(model => model.City)
+                            </th>
+                            <th class="numeric">
+                                @Html.DisplayNameFor(model => model.State)
+                            </th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                {
+                            <tr>
+                                <td class="numeric">
+                                    <input type="checkbox" name="chk=@item.UserId" id="@item.UserId">
+                                </td>
+                                <td class="numeric">
+                                    @Html.DisplayFor(modelItem => item.Name)
+
+                                </td>
+                                <td class="numeric">
+                                    @Html.DisplayFor(modelItem => item.Email)
+
+                                </td>
+                                <td class="numeric">
+                                    @Html.DisplayFor(modelItem => item.PhoneNumber)
+
+                                </td>
+                                <td class="numeric">
+                                    @Html.DisplayFor(modelItem => item.CompanyName)
+
+                                </td>
+                                <td class="numeric">
+                                    @Html.DisplayFor(modelItem => item.Address)
+
+                                </td>
+                                <td class="numeric">
+                                    @Html.DisplayFor(modelItem => item.Address2)
+
+                                </td>
+                                <td class="numeric">
+                                    @Html.DisplayFor(modelItem => item.City)
+
+                                </td>
+                                <td class="numeric">
+                                    @Html.DisplayFor(modelItem => item.State)
+
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+
+            </div>
+            <div class="mininumheight" style="padding-top:20px;float:right">
+                <input type="submit" value="InActive Users" class="btn btn-default signin upload" />
+            </div>
+        </div>
+    </div>
+}

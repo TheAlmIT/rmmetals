@@ -28,28 +28,78 @@
     <!-- Bxslider -->
     <link rel="stylesheet" href="~/css/jquery.bxslider.css">
 
-    <!-- HTML5 shim, for IE6-8 support of HTML5 elements. All other JS at the end of file. -->
-    <!--[if lt IE 9]>
-      <script src="~/js/html5shiv.js"></script>
-      <script src="~/js/respond.min.js"></script>
-    <![endif]-->
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <!-- Owl Carousel -->
+    <script type="text/javascript" src="~/js/owl.carousel.js"></script>
+    <!-- SmoothScroll -->
+    <script type="text/javascript" src="~/js/smoothscroll.js"></script>
+
+
+    @Scripts.Render("~/bundles/bootstrap")
+     @RenderSection("scripts", required: false)
+@*
+
+    <script src="@Url.Content("~/js/select2.min.js")"></script>
+     <script src="@Url.Content("~/js/select2.multiselect.js")"></script>
+
+     <script src="@Url.Content("~/js/jquery.multiselect.js")"></script>
+
+     <script type="text/javascript">
+         $(function () {
+             $(".listbox").multiselect();
+         });
+     </script>
+
+     <!-- HTML5 shim, for IE6-8 support of HTML5 elements. All other JS at the end of file. -->
+     <!--[if lt IE 9]>
+       <script src="~/js/html5shiv.js"></script>
+       <script src="~/js/respond.min.js"></script>
+     <![endif]-->
+*@    
     @Scripts.Render("~/bundles/jquery")
+
     @Scripts.Render("~/bundles/jqueryval")
+
+    <style>
+        #mainul a {
+            font-weight: bold;
+                font-family: Lucida Fax;
+
+        }
+         body{
+         background: rgb(180, 180, 180); 
+ } 
+    </style>
+
 </head>
-<body>
+<body >
     <!-- Header start -->
     <header id="header" class="navbar-fixed-top main-nav" role="banner">
-        <div class="container">
+        <div class="container" style='background-image:url(../../images/BannerBacknew.jpg); background-repeat:repeat-x'>
             <div class="row">
                 <div class="col-md-12 heade_bg">
-                    <!--/ Top info start -->
+                    <!--/ Top info start heade_bg-->
                     <div class="top-info">
                         <ul class="pull-right">
                             <!-- Social links -->
                             <li class="social-icon">
-                                <a href="https://twitter.com/RM_Metals" target="_blank"><i class="fa fa-twitter"></i></a>
-                                <a href="https://www.facebook.com/profile.php?id=100054251348160" target="_blank"><i class="fa fa-facebook"></i></a>
-                                <a href="https://www.linkedin.com/company/rm-metals" target="_blank"><i class="fa fa-linkedin"></i></a>
+                                <a id="tooltip2" data-toggle="tooltip" data-placement="top" title="Facebook" href="https://www.facebook.com/profile.php?id=100054251348160" target="_blank">
+                                    <i class="fa fa-facebook" style="font-weight: bold;"></i>
+                                </a>
+                                <a id="tooltip1" data-toggle="tooltip" data-placement="top" title="Twitter" href="https://twitter.com/RM_Metals" target="_blank">
+                                    <i class="fa fa-twitter" style="font-weight: bold;"></i>
+                                </a>
+                                <a id="tooltip3" data-toggle="tooltip" data-placement="top" title="Linkedin" href="https://www.linkedin.com/company/rm-metals" target="_blank">
+                                    <i class="fa fa-linkedin"></i>
+                                </a>
+                                <!--   <a id="tooltip4" href="#" data-toggle="tooltip" data-placement="top" title="Dribble">
+        <i class="fa fa-skype"></i>
+    </a>
+     <a id="tooltip2" data-toggle="tooltip" data-placement="top" title="Googlehangout" href="#">
+        <i class="fa fa-comments"></i></a>-->
 
 
                             </li><!-- Social links end-->
@@ -66,33 +116,42 @@
                             <span class="icon-bar"></span>
                         </button>
                         <a class="navbar-brand logo" href='@Url.Action("Index", "Home")'>
-                            <img class="img-responsive" src="~/images/logo.png" alt="logo">
+                            <img class="img-responsive" src="~/images/Logo.png" alt="logo">
                         </a>
                     </div><!--/ Logo end -->
 
                     <nav class="collapse navbar-collapse clearfix" role="navigation">
-                        <ul class="nav navbar-nav navbar-right">
+                        <ul class="nav navbar-nav navbar-right headermenu" id="mainul">
                             <li id="home" class="dropdown  @((ViewBag.PageName == "Home") ? "active" : "")">
                                 @Html.ActionLink("Home", "Index", "Home")
                             </li>
-                            <li id="Inventory" class="dropdown  @((ViewBag.PageName == "Inventory") ? "active" : "")">@Html.ActionLink("Inventory", "Index", "Inventory")</li>
+                            <li id="Inventory" class="dropdown  @((ViewBag.PageName == "Inventory") ? "active" : "")">
+                            @Html.ActionLink("Inventory", "Index", "Inventory")</li>
 
                             @if (Request.IsAuthenticated)
                             {
 
-                                <li id="Admin" class="dropdown @((ViewBag.PageName == "Admin") ? "active" : "")">
-                                    <a class="dropdown-toggle" data-toggle="dropdown">Admin</a>
-                                    <ul class="dropdown-menu">
-                                        <li>@Html.ActionLink("Report", "Index", "Report")</li>
-                                        <li>@Html.ActionLink("UpLoad Inventory", "Create", "Inventory")</li>
-                                    </ul>
-                                </li>
-
+                                if (User.IsInRole("Admin"))
+                                {
+                                    <li id="Admin" class="dropdown @((ViewBag.PageName == "Admin") ? "active" : "")">
+                                        <a class="dropdown-toggle" data-toggle="dropdown" >Admin</a>
+                                        <ul class="dropdown-menu">
+                                            <li>@Html.ActionLink("Report", "Index", "Report")</li>
+                                            <li>@Html.ActionLink("UpLoad Inventory", "Create", "Inventory")</li>
+                                            <li>@Html.ActionLink("Approve / Remove Users", "Approval", "Inventory")</li>
+                                            <li>@Html.ActionLink("InActivate Users", "InActive", "Inventory")</li>
+                                            @* <li>@Html.ActionLink("Delete Users", "DeleteUsers", "Inventory")</li>*@
+                                            <li>@Html.ActionLink("Manage Inventory", "Index", "Admin")</li>
+                                        </ul>
+                                    </li>
+                                }
                             }
-                            <li class="dropdown @((ViewBag.PageName == "Data Tables") ? "active" : "")">@Html.ActionLink("Data Tables", "DataTables", "Home") </li>
+                            <li class="dropdown @((ViewBag.PageName == "DataTables") ? "active" : "")">@Html.ActionLink("Data Tables", "DataTables", "Home") </li>
 
 
                             <li class="dropdown @((ViewBag.PageName == "Policies") ? "active" : "")">@Html.ActionLink("Policies", "Policies", "Home") </li>
+
+                            <li class="dropdown @((ViewBag.PageName == "Documents") ? "active" : "")">@Html.ActionLink("Documents", "Documents", "Home") </li>
 
 
                         </ul>
@@ -106,28 +165,21 @@
         </div><!--/ Container end -->
     </header><!--/ Header end -->
 
-    <scetion id="innercontent">
+    <section id="innercontent">
 
 
 
 
         <section id="service" class="wow fadeInUp">
             <div class="container">
-                <div class="row">
-
+                <div class="row" style="background: rgb(221, 221, 221);min-height:350px;">
                     @RenderBody()
                 </div>
-
             </div>
-
         </section>
-
-
-
-
         <section id="footer-wrapper">
             <!-- Footer top start -->
-            <footer id="footer" style="background-color:#f0f0f0;">
+            <footer id="footer" style="background-color:rgb(180, 180, 180);">
                 <div class="container" style="background-color:#054167;">
                     <div style="height:15px;">
                     </div>
@@ -140,7 +192,7 @@
                                 <ul>
                                     <li>@Html.ActionLink("Home", "Index", "Home")</li>
                                     <li>@Html.ActionLink("LOCAL DISTRIBUTION", "LOCALDISTRIBUTION", "Home")</li>
-                                    <li><a href="#">EXPORT SALES   </a></li>
+                                    <li><a href="http://www.rm-exports.com/">EXPORT SALES   </a></li>
                                     <li>@Html.ActionLink("INVENTORY", "Index", "INVENTORY")</li>
                                     <li>@Html.ActionLink("DATA TABLES", "DATATABLES", "Home")</li>
                                     <li>@Html.ActionLink("POLICIES", "POLICIES", "Home")</li>
@@ -149,19 +201,8 @@
 
                             </div>
                         </div><!--/ end about us -->
-                        @*<div class="col-md-3 col-sm-3 wow fadeInRight animated">
-                                <div class="quicklinks">
-                                    <h3 class="footer-title">Quick Links</h3>
-                                    <ul>
-                                        <li><a href="#">HOME </a></li>
-                                        <li><a href="#">LOCAL DISTRIBUTION</a></li>
-                                        <li><a href="#">EXPORT SALES   </a></li>
-                                        <li><a href="#">INVENTORY</a></li>
-                                        <li><a href="#">DATA TABLES   </a></li>
-                                        <li><a href="#">POLICIES   </a></li>
-                                    </ul>
-                                </div>
-                            </div>*@<!--/ end recent post -->
+
+
 
                         <div class="col-md-3 col-sm-3 wow fadeInRight animated">
 
@@ -172,14 +213,16 @@
                                     <ul class="list-unstyled">
                                         <li class="footer-sprite address">
                                             50 Cragwood Road, Suite 308<br>
-                                            South Plainfield, NJ 07080<br>
-                                            USA<br>
+                                            South Plainfield, NJ 07080, USA<br>
                                         </li>
                                         <li class="footer-sprite phone">
                                             Tel : 001 (908) 222-1500
                                         </li>
+                                        <li class="footer-sprite">
+                                            <span class="fax"><i class="fa faximg" style="width:28px;"></i>&nbsp;Fax : 001 (908) 222-1665</span>
+                                        </li>
                                         <li class="footer-sprite email">
-                                            <a href="mailto: rmmetals@gmail.com"> rmmetals@gmail.com</a>
+                                            <a href="mailto: rmmetals@gmail.com"> sam@rm-metals.com</a>
                                         </li>
                                     </ul>
                                 </address>
@@ -192,19 +235,15 @@
                             <div class="footer-icons">
                                 <h3 class="footer-title">Follow Us</h3>
                                 <p class="footer-social">
-                                    <a href="https://twitter.com/RM_Metals" target="_blank"><i class="fa fa-twitter"></i></a>
                                     <a href="https://www.facebook.com/profile.php?id=100054251348160" target="_blank"><i class="fa fa-facebook"></i></a>
+                                    <a href="https://twitter.com/RM_Metals" target="_blank"><i class="fa fa-twitter"></i></a>
+
                                     <a href="https://www.linkedin.com/company/rm-metals" target="_blank"><i class="fa fa-linkedin"></i></a>
+                                    @* <a href="#"><i class="fa fa-skype"></i></a>
+        <a href="#"><i class="fa fa-comments"></i></a>*@
+
                                 </p>
-                                <div class="newsletter">
-                                    <h4>Newsletter subscription</h4>
-                                    <form role="form">
-                                        <div class="form-group">
-                                            <input type="email" class="form-control emailform" id="email" value="E-mail">
-                                        </div>
-                                    </form>
-                                    <button type="button" class="btn btn-primary submitbutton">Submit</button>
-                                </div>
+
                             </div>
                         </div><!--/ end tweet -->
 
@@ -214,39 +253,18 @@
 
                         <div class="col-md-12 wow fadeInRight animated" style="visibility: visible;">
                             <div class="copyright-info">
-                                Rights Reserved, RM METALS 2011- @DateTime.Now.Year Copyright</span>
+                                <span> Rights Reserved, RM METALS 2011-@DateTime.Now.Year  Copyright</span>
+                                &nbsp;|&nbsp; <span><a href="http://www.thealmit.com/">Powered By almIT Services Inc.,</a></span>
                             </div>
                         </div>
                     </div>
                 </div><!-- Container end -->
             </footer><!-- Footer top end -->
             <!-- Footer bottom start -->
-            @*<div class="footer-bottom" style="background-color:#f0f0f0">
-                    <div class="container" style="background-color:#054167;">
-                        @*<div class="row">
 
-
-                                <div class="col-md-12 wow fadeInRight animated" style="visibility: visible;">
-                                    <div class="copyright-info">
-                                        Rights Reserved, RM METALS 2011-2016  Copyright</span>
-                                    </div>
-                                </div>
-                            </div><!-- Row end -->
-                    </div><!-- Container end -->
-                </div>*@<!-- Footer bottom end -->
         </section>
-    </scetion>
-    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-    <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <script src="~/js/bootstrap.min.js"></script>
-    <!-- Owl Carousel -->
-    <script type="text/javascript" src="~/js/owl.carousel.js"></script>
-    <!-- SmoothScroll -->
-    <script type="text/javascript" src="~/js/smoothscroll.js"></script>
- 
-    @Scripts.Render("~/bundles/bootstrap")
-    @RenderSection("scripts", required: false)
- 
+    </section>
+
+
 </body>
 </html>

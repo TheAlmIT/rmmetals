@@ -19,6 +19,9 @@ using System.Globalization;
 using System.Web.UI.WebControls;
 using System.Web.UI;
 using System.Web.Configuration;
+using LumenWorks.Framework.IO.Csv;
+using System.Web.Security;
+using Newtonsoft.Json;
 
 namespace RM.Controllers
 {
@@ -32,52 +35,158 @@ namespace RM.Controllers
             string submit = Request["submit"];
             ViewBag.Pages = Pages;
             ViewBag.LocSortParm = String.IsNullOrEmpty(sortOrder) ? "Loc_desc" : "";
+            ViewBag.ItemSortParm = String.IsNullOrEmpty(sortOrder) ? "Item_desc" : "";
             ViewBag.TypeSortParm = sortOrder == "Type" ? "Type_desc" : "Type";
             ViewBag.FinishSortParm = sortOrder == "Finish" ? "Finish_desc" : "Finish";
+            ViewBag.ThicknessSortParm = sortOrder == "Thickness" ? "Thickness_desc" : "Thickness";
             ViewBag.GaugeSortParm = sortOrder == "Gauge" ? "Gauge_desc" : "Gauge";
             ViewBag.WidthSortParm = sortOrder == "Width" ? "Width_desc" : "Width";
             ViewBag.WTNETSortParm = sortOrder == "WTNET" ? "WTNET_desc" : "WTNET";
-            ViewBag.NOOFPCSSortParm = sortOrder == "NOOFPCS" ? "NOOFPCS_desc" : "NOOFPCS";
-            if (string.IsNullOrEmpty(pro.Loc) && string.IsNullOrEmpty(pro.Type) && string.IsNullOrEmpty(pro.Finish) && string.IsNullOrEmpty(pro.Gauge) && string.IsNullOrEmpty(pro.Width) && string.IsNullOrEmpty(pro.WTNET))
+            //ViewBag.NOOFPCSSortParm = sortOrder == "NOOFPCS" ? "NOOFPCS_desc" : "NOOFPCS";
+            //if (string.IsNullOrEmpty(pro.Loc) && string.IsNullOrEmpty(pro.Type) && string.IsNullOrEmpty(pro.Finish) && string.IsNullOrEmpty(pro.Gauge) && string.IsNullOrEmpty(pro.Width) && string.IsNullOrEmpty(pro.WTNET))
+            //{
+            //    pro.ProductList = new List<Inventory>();
+
+            //}
+            if (pro.Locs == null && pro.Items == null && pro.Types == null && pro.Finishs == null && pro.Thicknesss == null && pro.Gauges == null && pro.Widths == null && pro.WTNETs == null)
             {
                 pro.ProductList = new List<Inventory>();
 
             }
             else
             {
+                Inventory objExisting = pro;
                 pro.ProductList = pro.ProductsList().ToList();
-                pro.ProductList = pro.ProductList.Where(a => a.Loc.ToUpper().Contains(string.IsNullOrEmpty(pro.Loc) ? a.Loc.ToUpper() : pro.Loc.ToUpper())).
-                    Where(a => a.Type.ToUpper().Contains(string.IsNullOrEmpty(pro.Type) ? a.Type.ToUpper() : pro.Type.ToUpper())).
-                    Where(a => a.Finish.ToUpper().Contains(string.IsNullOrEmpty(pro.Finish) ? a.Finish.ToUpper() : pro.Finish.ToUpper())).
-                    Where(a => a.Gauge.ToUpper().Contains(string.IsNullOrEmpty(pro.Gauge) ? a.Gauge.ToUpper() : pro.Gauge.ToUpper())).
-                    Where(a => a.Width.ToUpper().Contains(string.IsNullOrEmpty(pro.Width) ? a.Width.ToUpper() : (pro.Width.ToUpper()))).
-                    Where(a => a.WTNET.ToUpper().Contains(string.IsNullOrEmpty(pro.WTNET) ? a.WTNET.ToUpper() : (pro.WTNET.ToUpper()))).ToList();
+
+
+                //List<string> objLocs = (List<string>) objExisting.Locs[0].Split(',');
+
+                if (pro.Locs != null && pro.Locs[0] != "null")
+                {
+                    pro.ProductList = pro.ProductList.Where(a => objExisting.Locs[0].Replace("\"", "").Replace("[", "").Replace("]", "").Split(',').ToList().Contains(a.Loc)).ToList();
+                    pro.Locs = objExisting.Locs[0].Replace("\"", "").Replace("[", "").Replace("]", "").Split(',').ToList();
+                
+                }
+                if (pro.Items != null && pro.Items[0] != "null")
+                {
+                    pro.ProductList = pro.ProductList.Where(a => objExisting.Items[0].Replace("\"", "").Replace("[", "").Replace("]", "").Split(',').ToList().Contains(a.Item)).ToList();
+                    pro.Items = objExisting.Items[0].Replace("\"", "").Replace("[", "").Replace("]", "").Split(',').ToList();
+                }
+                if (pro.Types != null && pro.Types[0] != "null")
+                {
+                    pro.ProductList = pro.ProductList.Where(a => objExisting.Types[0].Replace("\"", "").Replace("[", "").Replace("]", "").Split(',').ToList().Contains(a.Type)).ToList();
+                    pro.Types = objExisting.Types[0].Replace("\"", "").Replace("[", "").Replace("]", "").Split(',').ToList();
+                }
+                if (pro.Finishs != null && pro.Finishs[0] != "null")
+                {
+                    pro.ProductList = pro.ProductList.Where(a => objExisting.Finishs[0].Replace("\"", "").Replace("[", "").Replace("]", "").Split(',').ToList().Contains(a.Finish)).ToList();
+                    pro.Finishs = objExisting.Finishs[0].Replace("\"", "").Replace("[", "").Replace("]", "").Split(',').ToList();
+                }
+                if (pro.Thicknesss != null && pro.Thicknesss[0] != "null")
+                {
+                    pro.ProductList = pro.ProductList.Where(a => objExisting.Thicknesss[0].Replace("\"", "").Replace("[", "").Replace("]", "").Split(',').ToList().Contains(a.Thickness)).ToList();
+                    pro.Thicknesss = objExisting.Thicknesss[0].Replace("\"", "").Replace("[", "").Replace("]", "").Split(',').ToList();
+                }
+                if (pro.Gauges != null && pro.Gauges[0] != "null")
+                {
+                    pro.ProductList = pro.ProductList.Where(a => objExisting.Gauges[0].Replace("\"", "").Replace("[", "").Replace("]", "").Split(',').ToList().Contains(a.Gauge)).ToList();
+                    pro.Gauges = objExisting.Gauges[0].Replace("\"", "").Replace("[", "").Replace("]", "").Split(',').ToList();
+                }
+                if (pro.Widths != null && pro.Widths[0] != "null")
+                {
+                    pro.ProductList = pro.ProductList.Where(a => objExisting.Widths[0].Replace("\"", "").Replace("[", "").Replace("]", "").Split(',').ToList().Contains(a.Width)).ToList();
+                    pro.Widths = objExisting.Widths[0].Replace("\"", "").Replace("[", "").Replace("]", "").Split(',').ToList();
+                }
+                if (pro.WTNETs != null && pro.WTNETs[0] != "null")
+                {
+                    pro.ProductList = pro.ProductList.Where(a => objExisting.WTNETs[0].Replace("\"", "").Replace("[", "").Replace("]", "").Split(',').ToList().Contains(a.WTNET)).ToList();
+                    pro.WTNETs = objExisting.WTNETs[0].Replace("\"", "").Replace("[", "").Replace("]", "").Split(',').ToList();
+                }
+
+                if (pro.Locs[0] == "null") pro.Locs = null;
+                if (pro.Items[0] == "null") pro.Items = null;
+                if (pro.Types[0] == "null") pro.Types = null;
+                if (pro.Finishs[0] == "null") pro.Finishs = null;
+                if (pro.Thicknesss[0] == "null") pro.Thicknesss = null;
+                if (pro.Gauges[0] == "null") pro.Gauges = null;
+                if (pro.Widths[0] == "null") pro.Widths = null;
+                if (pro.WTNETs[0] == "null") pro.WTNETs = null;
+                
+
+
+
+                //if (pro.Locs != null)
+                //    pro.ProductList = pro.ProductList.Where(a => objExisting.Locs.Contains(a.Loc)).ToList();
+                //if (pro.Items != null)
+                //  pro.ProductList = pro.ProductList.Where(a => objExisting.Items.Contains(a.Item)).ToList();
+                //if (pro.Types != null)
+                //    pro.ProductList = pro.ProductList.Where(a => objExisting.Types.Contains(a.Type)).ToList();
+                //if (pro.Finishs != null)
+                //    pro.ProductList = pro.ProductList.Where(a => objExisting.Finishs.Contains(a.Finish)).ToList();
+                //if (pro.Thicknesss != null)
+                //    pro.ProductList = pro.ProductList.Where(a => objExisting.Thicknesss.Contains(a.Thickness)).ToList();
+                //if (pro.Gauges != null)
+                //    pro.ProductList = pro.ProductList.Where(a => objExisting.Gauges.Contains(a.Gauge)).ToList();
+                //if (pro.Widths != null)
+                //    pro.ProductList = pro.ProductList.Where(a => objExisting.Widths.Contains(a.Width)).ToList();
+                //if (pro.WTNETs != null)
+                //    pro.ProductList = pro.ProductList.Where(a => objExisting.WTNETs.Contains(a.WTNET)).ToList();
+
+
+
+
+                //pro.ProductList = pro.ProductList.Where(a => a.Loc.ToUpper().Contains(string.IsNullOrEmpty(pro.Loc) ? a.Loc.ToUpper() : pro.Loc.ToUpper())).
+                //    Where(a => a.Item.ToUpper().Contains(string.IsNullOrEmpty(pro.Item) ? a.Item.ToUpper() : pro.Item.ToUpper())).
+                //    Where(a => a.Type.ToUpper().Contains(string.IsNullOrEmpty(pro.Type) ? a.Type.ToUpper() : pro.Type.ToUpper())).
+                //    Where(a => a.Finish.ToUpper().Contains(string.IsNullOrEmpty(pro.Finish) ? a.Finish.ToUpper() : pro.Finish.ToUpper())).
+                //    Where(a => a.Thickness.ToUpper().Contains(string.IsNullOrEmpty(pro.Thickness) ? a.Thickness.ToUpper() : pro.Thickness.ToUpper())).
+                //    Where(a => a.Gauge.ToUpper().Contains(string.IsNullOrEmpty(pro.Gauge) ? a.Gauge.ToUpper() : pro.Gauge.ToUpper())).
+                //    //Where(a => a.Width.ToUpper().Contains(string.IsNullOrEmpty(pro.Width) ? a.Width.ToUpper() : (pro.Width.ToUpper()))).
+                //    Where(a => a.WTNET.ToUpper().Contains(string.IsNullOrEmpty(pro.WTNET) ? a.WTNET.ToUpper() : (pro.WTNET.ToUpper()))).ToList();
+
+
+                //if (pro.Width!=null && !string.IsNullOrEmpty(pro.Width.Trim()) && pro.Width.ToLower() != "all")
+                //{
+                //    decimal outDecimal = 0;
+                //    string[] widths = pro.Width.Split('-');
+                //    decimal minWidth = Convert.ToDecimal(widths[0].Trim());
+                //    decimal maxWidth = 9999999;
+                //    if (widths[1].Trim().ToLower() != "high")
+                //    {
+                //        maxWidth = Convert.ToDecimal(widths[1].Trim());
+                //    }
+                //    pro.ProductList = (from item in pro.ProductList
+                //                       where decimal.TryParse(item.Width, out outDecimal) && Convert.ToDecimal(item.Width) >= minWidth && Convert.ToDecimal(item.Width) <= maxWidth
+                //                       select item).ToList();
+                //}
             }
 
             //List Displayed only after searched in filters
 
-            if (Id.HasValue)
-            {
-                RequestedQuote quote = new RequestedQuote();
-                quote = quote.GetData(User.Identity.GetUserId());
-                quote.User_Id = User.Identity.GetUserId();
-                quote.product = new Inventory();
-                quote.product = quote.product.productDetails(Id.Value);
-                quote.insert(quote);
+            //Commented By Vaidula 24May2017 for bulkRequest Quote 
+            //This code moved to seperate Method
+            //if (Id.HasValue)
+            //{
+            //    RequestedQuote quote = new RequestedQuote();
+            //    quote = quote.GetData(User.Identity.GetUserId());
+            //    quote.User_Id = User.Identity.GetUserId();
+            //    quote.product = new Inventory();
+            //    quote.product = quote.product.productDetails(Id.Value);
+            //    quote.insert(quote);
 
-                var smtpClient = new SmtpClient();
-                string fromEmailId = System.Configuration.ConfigurationManager.AppSettings["SystemEmailId"];
-                string toEmailId = System.Configuration.ConfigurationManager.AppSettings["RequestQuoteToEmailId"];
+            //    var smtpClient = new SmtpClient();
+            //    string fromEmailId = System.Configuration.ConfigurationManager.AppSettings["SystemEmailId"];
+            //    string toEmailId = System.Configuration.ConfigurationManager.AppSettings["RequestQuoteToEmailId"];
 
-                var message = new MailMessage(fromEmailId, toEmailId)
-                {
-                    Subject = "Requested Quote",
-                    Body = "User Name : " + User.Identity.GetUserName() + Environment.NewLine + "Phone Number : " + quote.PhoneNumber + Environment.NewLine + "IP Address : " + Request.ServerVariables["REMOTE_ADDR"] + Environment.NewLine + "Location : " + quote.product.Loc + Environment.NewLine + "Type : " + quote.product.Type + Environment.NewLine + "Finish : " + quote.product.Finish + Environment.NewLine + "Gauge : " + quote.product.Gauge + Environment.NewLine + "Width : " + quote.product.Width + Environment.NewLine + "Net Wt : " + quote.product.WTNET + Environment.NewLine + "Pieces : " + quote.product.NOOFPCS,
+            //    var message = new MailMessage(fromEmailId, toEmailId)
+            //    {
+            //        Subject = "Requested Quote",
+            //        Body = "User Name : " + User.Identity.GetUserName() + Environment.NewLine + "Phone Number : " + quote.PhoneNumber + Environment.NewLine + "IP Address : " + Request.ServerVariables["REMOTE_ADDR"] + Environment.NewLine + "Location : " + quote.product.Loc + Environment.NewLine + "Type : " + quote.product.Type + Environment.NewLine + "Finish : " + quote.product.Finish + Environment.NewLine + "Gauge : " + quote.product.Gauge + Environment.NewLine + "Width : " + quote.product.Width + Environment.NewLine + "Net Wt : " + quote.product.WTNET + Environment.NewLine + "Pieces : " + quote.product.NOOFPCS,
 
-                };
-                smtpClient.Send(message);
+            //    };
+            //    smtpClient.Send(message);
 
-            }
+            //}
 
             if (Export.HasValue)
             {
@@ -85,14 +194,16 @@ namespace RM.Controllers
                 grid.DataSource = from data in pro.ProductList
                                   select new
                                   {
-                                      
+
                                       Location = data.Loc,
+                                      Item = data.Item,
                                       Type = data.Type,
                                       Finish = data.Finish,
+                                      Thickness = data.Thickness,
                                       Gauge = data.Gauge,
                                       Width = data.Width,
-                                      WTNET = data.WTNET,
-                                      NOOFPCS = 0
+                                      WTNET = data.WTNET//,
+                                      //NOOFPCS = 0
                                   };
                 grid.DataBind();
                 Response.AddHeader("content-disposition", "attachment; filename=MyExcelFile.xls");
@@ -114,11 +225,17 @@ namespace RM.Controllers
                 case "Loc_desc":
                     pro.ProductList = pro.ProductList.OrderByDescending(s => s.Loc).ToList();
                     break;
+                case "Item_desc":
+                    pro.ProductList = pro.ProductList.OrderByDescending(s => s.Item).ToList();
+                    break;
                 case "Finish":
                     pro.ProductList = pro.ProductList.OrderBy(s => s.Finish).ToList();
                     break;
                 case "Finish_desc":
                     pro.ProductList = pro.ProductList.OrderByDescending(s => s.Finish).ToList();
+                    break;
+                case "Thickness_desc":
+                    pro.ProductList = pro.ProductList.OrderByDescending(s => s.Thickness).ToList();
                     break;
                 case "Gauge":
                     pro.ProductList = pro.ProductList.OrderBy(s => s.Gauge).ToList();
@@ -149,9 +266,9 @@ namespace RM.Controllers
                 case "NOOFPCS":
                     pro.ProductList = pro.ProductList.OrderBy(s => s.NOOFPCS).ToList();
                     break;
-                case "NOOFPCS_desc":
-                    pro.ProductList = pro.ProductList.OrderByDescending(s => s.NOOFPCS).ToList();
-                    break;
+                //case "NOOFPCS_desc":
+                //    pro.ProductList = pro.ProductList.OrderByDescending(s => s.NOOFPCS).ToList();
+                //    break;
                 default:
                     pro.ProductList = pro.ProductList.OrderBy(s => s.Loc).ToList();
                     break;
@@ -190,12 +307,17 @@ namespace RM.Controllers
 
             if (ModelState.IsValid)
             {
-                  string submit = Request["submit"];
+                string submit = Request["submit"];
                 Dictionary<int, string> searchData = new Dictionary<int, string>();
 
-                if (!(string.IsNullOrEmpty(pro.Loc)))
+                if (pro.Locs != null && pro.Locs.Count > 0)
                 {
-                    searchData.Add(1, pro.Loc);
+                    string strLocs = string.Join(",", pro.Locs.Select(p => "'" + p.ToString() + "'"));
+                    searchData.Add(1, strLocs);
+                }
+                if (!(string.IsNullOrEmpty(pro.Item)))
+                {
+                    searchData.Add(1, pro.Item);
                 }
                 if (!(string.IsNullOrEmpty(pro.Type)))
                 {
@@ -204,6 +326,10 @@ namespace RM.Controllers
                 if (!(string.IsNullOrEmpty(pro.Finish)))
                 {
                     searchData.Add(3, pro.Finish);
+                }
+                if (!(string.IsNullOrEmpty(pro.Thickness)))
+                {
+                    searchData.Add(3, pro.Thickness);
                 }
                 if (!(string.IsNullOrEmpty(pro.Gauge)))
                 {
@@ -228,21 +354,95 @@ namespace RM.Controllers
                     search.insert(search);
                 }
 
-                if (string.IsNullOrEmpty(pro.Loc) && string.IsNullOrEmpty(pro.Type) && string.IsNullOrEmpty(pro.Finish) && string.IsNullOrEmpty(pro.Gauge) && string.IsNullOrEmpty(pro.Width) && string.IsNullOrEmpty(pro.WTNET))
+                //if (string.IsNullOrEmpty(pro.Item) && string.IsNullOrEmpty(pro.Item) && string.IsNullOrEmpty(pro.Type) && string.IsNullOrEmpty(pro.Finish) && string.IsNullOrEmpty(pro.Thickness) && string.IsNullOrEmpty(pro.Gauge) && string.IsNullOrEmpty(pro.Width) && string.IsNullOrEmpty(pro.WTNET))
+                //{
+                //    pro.ProductList = new List<Inventory>();
+
+                //}
+                if (pro.Locs == null && pro.Items == null && pro.Types == null && pro.Finishs == null && pro.Thicknesss == null && pro.Gauges == null && pro.Widths == null && pro.WTNETs == null)
                 {
                     pro.ProductList = new List<Inventory>();
 
                 }
                 else
                 {
+                    Inventory objExisting = pro;
                     pro.ProductList = pro.ProductsList().ToList();
-                    pro.ProductList = pro.ProductList.Where(a => a.Loc.ToUpper().Contains(string.IsNullOrEmpty(pro.Loc) ? a.Loc.ToUpper() : pro.Loc.ToUpper())).
-                        Where(a => a.Type.ToUpper().Contains(string.IsNullOrEmpty(pro.Type) ? a.Type.ToUpper() : pro.Type.ToUpper())).
-                        Where(a => a.Finish.ToUpper().Contains(string.IsNullOrEmpty(pro.Finish) ? a.Finish.ToUpper() : pro.Finish.ToUpper())).
-                        Where(a => a.Gauge.ToUpper().Contains(string.IsNullOrEmpty(pro.Gauge) ? a.Gauge.ToUpper() : pro.Gauge.ToUpper())).
-                        Where(a => a.Width.ToUpper().Contains(string.IsNullOrEmpty(pro.Width) ? a.Width.ToUpper() : (pro.Width.ToUpper()))).
-                        Where(a => a.WTNET.ToUpper().Contains(string.IsNullOrEmpty(pro.WTNET) ? a.WTNET.ToUpper() : (pro.WTNET.ToUpper()))).ToList();
+
+                    if (pro.Locs != null)
+                        pro.ProductList = pro.ProductList.Where(a => objExisting.Locs.Contains(a.Loc)).ToList();
+                    if (pro.Items != null)
+                        pro.ProductList = pro.ProductList.Where(a => objExisting.Items.Contains(a.Item)).ToList();
+                    if (pro.Types != null)
+                        pro.ProductList = pro.ProductList.Where(a => objExisting.Types.Contains(a.Type)).ToList();
+                    if (pro.Finishs != null)
+                        pro.ProductList = pro.ProductList.Where(a => objExisting.Finishs.Contains(a.Finish)).ToList();
+                    if (pro.Thicknesss != null)
+                        pro.ProductList = pro.ProductList.Where(a => objExisting.Thicknesss.Contains(a.Thickness)).ToList();
+                    if (pro.Gauges != null)
+                        pro.ProductList = pro.ProductList.Where(a => objExisting.Gauges.Contains(a.Gauge)).ToList();
+                    if (pro.Widths != null)
+                        pro.ProductList = pro.ProductList.Where(a => objExisting.Widths.Contains(a.Width)).ToList();
+                    if (pro.WTNETs != null)
+                        pro.ProductList = pro.ProductList.Where(a => objExisting.WTNETs.Contains(a.WTNET)).ToList();
+
+                    //pro.ProductList = pro.ProductList.Where(a => pro.Locs != null && pro.Locs.Contains(a.Loc)).
+
+                    //    Where(a => a.Type.ToUpper().Contains(string.IsNullOrEmpty(pro.Type) ? a.Type.ToUpper() : pro.Type.ToUpper())).
+                    //    Where(a => a.Finish.ToUpper().Contains(string.IsNullOrEmpty(pro.Finish) ? a.Finish.ToUpper() : pro.Finish.ToUpper())).
+                    //    //Where(a => a.Thickness.ToUpper().Contains(string.IsNullOrEmpty(pro.Thickness) ? a.Thickness.ToUpper() : pro.Thickness.ToUpper())).
+                    //    Where(a => a.Gauge.ToUpper().Contains(string.IsNullOrEmpty(pro.Gauge) ? a.Gauge.ToUpper() : pro.Gauge.ToUpper())).
+
+                    //    //vaidula 23May2017
+                    //    Where(a => a.Width.ToUpper().Contains(string.IsNullOrEmpty(pro.Width) ? a.Width.ToUpper() : (pro.Width.ToUpper()))).
+                    //    Where(a => a.WTNET.ToUpper().Contains(string.IsNullOrEmpty(pro.WTNET) ? a.WTNET.ToUpper() : (pro.WTNET.ToUpper()))).ToList();
+
+
+
+
+                    //pro.ProductList = pro.ProductList.Where(a => a.Loc.ToUpper().Contains(string.IsNullOrEmpty(pro.Loc) ? a.Loc.ToUpper() : pro.Loc.ToUpper())).
+                    // Where(a => a.Item.ToUpper().Contains(string.IsNullOrEmpty(pro.Item) ? a.Type.ToUpper() : pro.Item.ToUpper())).
+                    //Where(a => a.Type.ToUpper().Contains(string.IsNullOrEmpty(pro.Type) ? a.Type.ToUpper() : pro.Type.ToUpper())).
+                    //Where(a => a.Finish.ToUpper().Contains(string.IsNullOrEmpty(pro.Finish) ? a.Finish.ToUpper() : pro.Finish.ToUpper())).
+                    ////Where(a => a.Thickness.ToUpper().Contains(string.IsNullOrEmpty(pro.Thickness) ? a.Thickness.ToUpper() : pro.Thickness.ToUpper())).
+                    //Where(a => a.Gauge.ToUpper().Contains(string.IsNullOrEmpty(pro.Gauge) ? a.Gauge.ToUpper() : pro.Gauge.ToUpper())).
+
+                    ////vaidula 23May2017
+                    //Where(a => a.Width.ToUpper().Contains(string.IsNullOrEmpty(pro.Width) ? a.Width.ToUpper() : (pro.Width.ToUpper()))).
+                    //Where(a => a.WTNET.ToUpper().Contains(string.IsNullOrEmpty(pro.WTNET) ? a.WTNET.ToUpper() : (pro.WTNET.ToUpper()))).ToList();
+
+                    //commented by vaidula 23may2017
+                    //if (pro.Width != null && !string.IsNullOrEmpty(pro.Width.Trim()) && pro.Width.ToLower() != "all")
+                    //{
+                    //    decimal outDecimal = 0;
+                    //    string[] widths = pro.Width.Split('-');
+                    //    decimal minWidth = Convert.ToDecimal(widths[0].Trim());
+                    //    decimal maxWidth = 9999999;
+                    //    if (widths[1].Trim().ToLower() != "high")
+                    //    {
+                    //      maxWidth = Convert.ToDecimal(widths[1].Trim());
+                    //    }
+                    //    pro.ProductList = (from item in pro.ProductList
+                    //                       where decimal.TryParse(item.Width,out outDecimal) && Convert.ToDecimal(item.Width) >= minWidth && Convert.ToDecimal(item.Width) <= maxWidth
+                    //        select item).ToList();
+                    //}
+
+
+
+                    pro.Locs = objExisting.Locs;
+                    pro.Items = objExisting.Items;
+                    pro.Types = objExisting.Types;
+                    pro.Finishs = objExisting.Finishs;
+                    pro.Gauges = objExisting.Gauges;
+                    pro.Thicknesss = objExisting.Thicknesss;
+                    pro.Widths = objExisting.Widths;
+                    pro.WTNETs = objExisting.WTNETs;
+
+
                 }
+
+
+
 
                 if (string.IsNullOrEmpty(Pages))
                 {
@@ -253,6 +453,7 @@ namespace RM.Controllers
                 else
                 {
                     pro.IPagedProductsList = pro.ProductList.ToPagedList(page ?? 1, Convert.ToInt32(Pages));
+
                     return View(pro);
                 }
             }
@@ -262,13 +463,13 @@ namespace RM.Controllers
             }
         }
 
-
         public ActionResult Details(int id)
         {
             return View();
         }
 
         // GET: Product/Create
+        [Authorize(Roles = "Admin")]
         public ActionResult Create()
         {
             return View();
@@ -276,127 +477,71 @@ namespace RM.Controllers
 
         // POST: Product/Create
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public ActionResult Create(HttpPostedFileBase file)
         {
-            string MinimumExcelDataValues = WebConfigurationManager.AppSettings["MinimumExcelDataValues"];
-            DataSet ds = new DataSet();
-            if (Request.Files["file"].ContentLength > 0)
+
+            if (ModelState.IsValid)
             {
-                string fileExtension =
-                                     System.IO.Path.GetExtension(Request.Files["file"].FileName);
-
-                if (fileExtension == ".xls" || fileExtension == ".xlsx")
+                if (file != null && file.ContentLength > 0)
                 {
-                    string fileLocation = Server.MapPath("~/Content/") + Request.Files["file"].FileName;
-                    if (System.IO.File.Exists(fileLocation))
+                    if (file.FileName.EndsWith(".csv"))
                     {
+                        Stream stream = file.InputStream;
+                        DataTable csvTable = new DataTable();
+                        using (CsvReader csvReader =
+                            new CsvReader(new StreamReader(stream), true))
+                        {
+                            csvTable.Load(csvReader);
+                        }
+                        if (!csvTable.Columns.Contains("LOC") || !csvTable.Columns.Contains("ITEM") || !csvTable.Columns.Contains("TYPE") ||
+                            !csvTable.Columns.Contains("FINISH") || !csvTable.Columns.Contains("THCKNS") || !csvTable.Columns.Contains("GAUGE") ||
+                            !csvTable.Columns.Contains("WIDTH") || !csvTable.Columns.Contains("WT NET"))
+                        {
+                            ModelState.AddModelError("File", "This file columns are not matched with web site columns");
+                            return View();
+                        }
 
-                        System.IO.File.Delete(fileLocation);
-                    }
-                    Request.Files["file"].SaveAs(fileLocation);
-                    string excelConnectionString = string.Empty;
-                    excelConnectionString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" +
-                    fileLocation + ";Extended Properties=\"Excel 12.0;HDR=Yes;IMEX=2\"";
-                    //connection String for xls file format.
-                    if (fileExtension == ".xls")
-                    {
-                        excelConnectionString = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" +
-                        fileLocation + ";Extended Properties=\"Excel 8.0;HDR=Yes;IMEX=2\"";
-                    }
-                    //connection String for xlsx file format.
-                    else if (fileExtension == ".xlsx")
-                    {
-                        excelConnectionString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" +
-                        fileLocation + ";Extended Properties=\"Excel 12.0;HDR=Yes;IMEX=2\"";
-                    }
-
-                    //                    Create Connection to Excel work book and add oledb namespace
-                    OleDbConnection excelConnection = new OleDbConnection(excelConnectionString);
-                    excelConnection.Open();
-                    DataTable dt = new DataTable();
-
-                    dt = excelConnection.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, null);
-                    if (dt == null)
-                    {
-                        return null;
-                    }
-
-                    String[] excelSheets = new String[dt.Rows.Count];
-                    int t = 0;
-                    //excel data saves in temp file here.
-                    foreach (DataRow row in dt.Rows)
-                    {
-                        excelSheets[t] = row["TABLE_NAME"].ToString();
-                        t++;
-                    }
-
-                    OleDbConnection excelConnection1 = new OleDbConnection(excelConnectionString);
-
-
-                    string query = string.Format("Select * from [{0}] ", excelSheets[0]);
-                    using (OleDbDataAdapter dataAdapter = new OleDbDataAdapter(query, excelConnection1))
-                    {
-                        dataAdapter.Fill(ds);
-                    }
-                }
-                if (fileExtension.ToString().ToLower().Equals(".xml"))
-                {
-                    string fileLocation = Server.MapPath("~/Content/") + Request.Files["FileUpload"].FileName;
-                    if (System.IO.File.Exists(fileLocation))
-                    {
-                        System.IO.File.Delete(fileLocation);
-                    }
-
-                    Request.Files["FileUpload"].SaveAs(fileLocation);
-                    XmlTextReader xmlreader = new XmlTextReader(fileLocation);
-                    // DataSet ds = new DataSet();
-                    ds.ReadXml(xmlreader);
-                    xmlreader.Close();
-                }
-                string conn1 = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
-                MySqlConnection con1 = new MySqlConnection(conn1);
-                try
-                {
-                    if (ds.Tables[0].Rows.Count > Convert.ToInt32(MinimumExcelDataValues))
-                    {
+                        string conn1 = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+                        MySqlConnection con1 = new MySqlConnection(conn1);
                         string query1 = "truncate table products";
                         MySqlCommand cmd1 = new MySqlCommand(query1, con1);
                         con1.Open();
                         cmd1.ExecuteNonQuery();
 
-                        for (int i = 0; i < ds.Tables[0].Rows.Count; i++)
+                        foreach (DataRow row in csvTable.Rows)
                         {
-                            string conn = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
-                            MySqlConnection con = new MySqlConnection(conn);
 
-                            if (!string.IsNullOrEmpty(ds.Tables[0].Rows[i][0].ToString()) &&
-                                !string.IsNullOrEmpty(ds.Tables[0].Rows[i][1].ToString()) &&
-                                !string.IsNullOrEmpty(ds.Tables[0].Rows[i][2].ToString()) &&
-                                !string.IsNullOrEmpty(ds.Tables[0].Rows[i][3].ToString()) &&
-                                !string.IsNullOrEmpty(ds.Tables[0].Rows[i][4].ToString()) &&
-                                !string.IsNullOrEmpty(ds.Tables[0].Rows[i][5].ToString()) &&
-                                !string.IsNullOrEmpty(ds.Tables[0].Rows[i][6].ToString()))
-                            {
-                                string query = "Insert into products(Loc,Type,Finish,Gauge,Width,WTNET,NOOFPCS) Values('" +
-                                 ds.Tables[0].Rows[i][0].ToString() + "','" + ds.Tables[0].Rows[i][1].ToString() +
-                                 "','" + ds.Tables[0].Rows[i][2].ToString() + "','" + ds.Tables[0].Rows[i][3].ToString() + "','"
-                                 + ds.Tables[0].Rows[i][4].ToString() + "','" +
-                                 ds.Tables[0].Rows[i][5].ToString() + "','" + ds.Tables[0].Rows[i][6].ToString() + "')";
-                                con.Open();
-                                MySqlCommand cmd = new MySqlCommand(query, con);
-                                cmd.ExecuteNonQuery();
-                                con.Close();
-                            }
+
+                            string query = string.Format("Insert into products(Loc,Item,Type,Finish,Thickness,Gauge,Width,WTNET) Values('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}')",
+                                row[csvTable.Columns["LOC"]].ToString().Replace("'", "''"), row[csvTable.Columns["ITEM"]].ToString().Replace("'", "''"),
+                                row[csvTable.Columns["TYPE"]].ToString().Replace("'", "''"), row[csvTable.Columns["FINISH"]].ToString().Replace("'", "''"),
+                                row[csvTable.Columns["THCKNS"]].ToString().Replace("'", "''"), row[csvTable.Columns["GAUGE"]].ToString().Replace("'", "''"),
+                                row[csvTable.Columns["WIDTH"]].ToString().Replace("'", "''"), row[csvTable.Columns["WT NET"]].ToString().Replace("'", "''"));
+
+
+                            MySqlCommand cmd = new MySqlCommand(query, con1);
+                            cmd.ExecuteNonQuery();
 
 
                         }
+                        con1.Close();
+                        ViewBag.ShowData = csvTable.Rows.Count;
 
-                        ViewBag.ShowData = ds.Tables[0].Rows.Count;
                     }
+
+
+                    else
+                    {
+                        ModelState.AddModelError("File", "This file format is not supported");
+                        return View();
+                    }
+
                 }
-                catch (Exception ex)
+                else
                 {
-                    throw ex;
+                    ModelState.AddModelError("File", "Please Upload Your file");
+                    return View();
                 }
             }
             return View();
@@ -414,6 +559,19 @@ namespace RM.Controllers
 
 
             return Json(Location, JsonRequestBehavior.AllowGet);
+        }
+        public JsonResult GetItem(string term)
+        {
+
+            Inventory pro = new Inventory();
+            List<string> Item;
+
+            pro.ProductList = pro.ProductsList();
+
+            Item = pro.ProductList.Where(a => a.Item.StartsWith(term.ToUpper())).Select(b => b.Item).Distinct().ToList();
+
+
+            return Json(Item, JsonRequestBehavior.AllowGet);
         }
         public JsonResult GetType(string term)
         {
@@ -441,6 +599,21 @@ namespace RM.Controllers
 
             return Json(Finish, JsonRequestBehavior.AllowGet);
         }
+
+        public JsonResult GetThickness(string term)
+        {
+
+            Inventory pro = new Inventory();
+            List<string> Thickness;
+
+            pro.ProductList = pro.ProductsList();
+
+            Thickness = pro.ProductList.Where(a => a.Thickness.StartsWith(term.ToUpper())).Select(b => b.Thickness).Distinct().ToList();
+
+
+            return Json(Thickness, JsonRequestBehavior.AllowGet);
+        }
+
         public JsonResult GetGauge(string term)
         {
 
@@ -482,7 +655,220 @@ namespace RM.Controllers
         }
 
 
+        public ActionResult Approval()
+        {
+            RegisterViewModel user = new RegisterViewModel();
+            user.Users = user.GetUsers();
+            return View(user.Users.Where(a => a.Approved == false));
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
+
+        public ActionResult Approval(FormCollection formCollection,string submit)
+        {
+            if (formCollection["remove"] != null)
+            {
+                return DeleteUsers(formCollection);
+            }
+            else
+            {
+                RegisterViewModel Allusers = new RegisterViewModel();
+                Allusers.Users = Allusers.GetUsers();
 
 
+                var Users = formCollection.AllKeys.Where(c => c.StartsWith("chk")).ToList();
+                for (var i = 0; i < Users.Count(); i++)
+                {
+                    var val = Users[i].Split('=');
+                    string UserId = val[1];
+                    Allusers.ApproveUsers(UserId);
+
+                    var user = Allusers.Users.Where(a => a.UserId == UserId).Single();
+
+                    var smtpClient = new SmtpClient();
+                    string fromEmailId = System.Configuration.ConfigurationManager.AppSettings["SystemEmailId"];
+
+                    var message = new MailMessage(fromEmailId, user.Email)
+                    {
+                        Subject = "Registration Approved",
+                        Body = "Hello " + user.Name + Environment.NewLine + "You registration is approved by Admin, now you can login to the system. Please click <a href='http://www.rm-metals.com/rm-metals/Account/Login'>here</a>."
+                    };
+                    message.IsBodyHtml = true;
+                    smtpClient.Send(message);
+                }
+                Allusers.Users = Allusers.GetUsers();
+                return View(Allusers.Users.Where(a => a.Approved == false));
+            }
+        }
+
+        [Authorize(Roles = "Admin")]
+        public ActionResult InActive()
+        {
+            RegisterViewModel user = new RegisterViewModel();
+            user.Users = user.GetUsers();
+
+            return View(user.Users.Where(a => a.Approved == true));
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        public ActionResult InActive(FormCollection formCollection)
+        {
+            RegisterViewModel user = new RegisterViewModel();
+            var Users = formCollection.AllKeys.Where(c => c.StartsWith("chk")).ToList();
+            for (var i = 0; i < Users.Count(); i++)
+            {
+                var val = Users[i].Split('=');
+                string UserId = val[1];
+                user.DisApproveUsers(UserId);
+
+            }
+            user.Users = user.GetUsers();
+            return View(user.Users.Where(a => a.Approved == true));
+        }
+
+        // [Authorize(Roles = "Admin")]
+        //public ActionResult DeleteUsers()
+        //{
+        //    RegisterViewModel user = new RegisterViewModel();
+        //    user.Users = user.GetUsers();
+
+        //    return View(user.Users);
+        //}
+
+        //[HttpPost]
+        // [Authorize(Roles = "Admin")]
+        public ActionResult DeleteUsers(FormCollection formCollection)
+        {
+            RegisterViewModel user = new RegisterViewModel();
+            var Users = formCollection.AllKeys.Where(c => c.StartsWith("chk")).ToList();
+            for (var i = 0; i < Users.Count(); i++)
+            {
+                var val = Users[i].Split('=');
+                string UserId = val[1];
+                user.DeleteUser(UserId);
+            }
+            user.Users = user.GetUsers();
+            return View(user.Users.Where(a => a.Approved == false));
+        }
+
+        public void Update(Inventory inventory)
+        {
+            inventory.UpdateproductDetails();
+        }
+
+        public void Delete(Inventory inventory)
+        {
+            //inventory.DeleteproductDetails();
+        }
+
+
+        #region Rquest Quote
+        [HttpPost]
+        public void BulkRequestQuote(List<int> rqids = null)
+        {
+            foreach (int Id in rqids)
+            {
+                RequestedQuote quote = new RequestedQuote();
+                quote = quote.GetData(User.Identity.GetUserId());
+                quote.User_Id = User.Identity.GetUserId();
+                quote.product = new Inventory();
+                quote.product = quote.product.productDetails(Id);
+                quote.insert(quote);
+
+                var smtpClient = new SmtpClient();
+                string fromEmailId = System.Configuration.ConfigurationManager.AppSettings["SystemEmailId"];
+                string toEmailId = System.Configuration.ConfigurationManager.AppSettings["RequestQuoteToEmailId"];
+
+                var message = new MailMessage(fromEmailId, toEmailId)
+                {
+                    Subject = "Requested Quote",
+                    Body = "User Name : " + User.Identity.GetUserName() + Environment.NewLine + "Phone Number : " + quote.PhoneNumber + Environment.NewLine + "IP Address : " + Request.ServerVariables["REMOTE_ADDR"] + Environment.NewLine + "Location : " + quote.product.Loc + Environment.NewLine + "Item : " + quote.product.Item + Environment.NewLine + "Type : " + quote.product.Type + Environment.NewLine + "Finish : " + quote.product.Finish + Environment.NewLine + "Thickness : " + quote.product.Thickness + Environment.NewLine + "Gauge : " + quote.product.Gauge + Environment.NewLine + "Width : " + quote.product.Width + Environment.NewLine + "Net Wt : " + quote.product.WTNET + Environment.NewLine, // + "Pieces : " + quote.product.NOOFPCS,
+
+                };
+
+                message.CC.Add(new MailAddress(User.Identity.Name));
+
+                smtpClient.Send(message);
+            }
+
+        }
+
+
+
+        public void ExporttoExcel(int? Export, string Locs, string Items, string Types, string Finishs,
+            string Thicknesss, string Gauges, string Widths, string WTNETs)
+        {
+            Inventory pro = new Inventory();
+            pro.Locs = JsonConvert.DeserializeObject<List<string>>(Locs);
+            pro.Items = JsonConvert.DeserializeObject<List<string>>(Items);
+            pro.Types = JsonConvert.DeserializeObject<List<string>>(Types);
+            pro.Finishs = JsonConvert.DeserializeObject<List<string>>(Finishs);
+            pro.Thicknesss = JsonConvert.DeserializeObject<List<string>>(Thicknesss);
+            pro.Gauges = JsonConvert.DeserializeObject<List<string>>(Gauges);
+            pro.Widths = JsonConvert.DeserializeObject<List<string>>(Widths);
+            pro.WTNETs = JsonConvert.DeserializeObject<List<string>>(WTNETs);
+            if (pro.Locs == null && pro.Items == null && pro.Types == null && pro.Finishs == null && pro.Thicknesss == null && pro.Gauges == null && pro.Widths == null && pro.WTNETs == null)
+            {
+                pro.ProductList = new List<Inventory>();
+
+            }
+            else
+            {
+                Inventory objExisting = pro;
+                pro.ProductList = pro.ProductsList().ToList();
+
+                if (pro.Locs != null)
+                    pro.ProductList = pro.ProductList.Where(a => objExisting.Locs.Contains(a.Loc)).ToList();
+                if (pro.Items != null)
+                    pro.ProductList = pro.ProductList.Where(a => objExisting.Items.Contains(a.Item)).ToList();
+                if (pro.Types != null)
+                    pro.ProductList = pro.ProductList.Where(a => objExisting.Types.Contains(a.Type)).ToList();
+                if (pro.Finishs != null)
+                    pro.ProductList = pro.ProductList.Where(a => objExisting.Finishs.Contains(a.Finish)).ToList();
+                if (pro.Thicknesss != null)
+                    pro.ProductList = pro.ProductList.Where(a => objExisting.Thicknesss.Contains(a.Thickness)).ToList();
+                if (pro.Gauges != null)
+                    pro.ProductList = pro.ProductList.Where(a => objExisting.Gauges.Contains(a.Gauge)).ToList();
+                if (pro.Widths != null)
+                    pro.ProductList = pro.ProductList.Where(a => objExisting.Widths.Contains(a.Width)).ToList();
+                if (pro.WTNETs != null)
+                    pro.ProductList = pro.ProductList.Where(a => objExisting.WTNETs.Contains(a.WTNET)).ToList();
+
+            }
+            // if (Export.HasValue)
+            //{
+            var grid = new GridView();
+            grid.DataSource = from data in pro.ProductList
+                              select new
+                              {
+
+                                  Location = data.Loc,
+                                  Item = data.Item,
+                                  Type = data.Type,
+                                  Finish = data.Finish,
+                                  Thickness = data.Thickness,
+                                  Gauge = data.Gauge,
+                                  Width = data.Width,
+                                  WTNET = data.WTNET//,
+                                  //NOOFPCS = 0
+                              };
+            grid.DataBind();
+            Response.AddHeader("content-disposition", "attachment; filename=MyExcelFile.xls");
+            Response.ContentType = "application/ms-excel";
+            Response.Charset = "";
+            StringWriter sw = new StringWriter();
+            HtmlTextWriter htw = new HtmlTextWriter(sw);
+
+            grid.RenderControl(htw);
+
+            Response.Output.Write(sw.ToString());
+
+            Response.End();
+
+            //}
+        }
+        #endregion Rquest Quote
     }
 }

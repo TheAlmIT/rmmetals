@@ -109,10 +109,7 @@ namespace RM.Models
                 cmd.Parameters.AddWithValue("@_IPAddress", IPAddress);
                 cmd.Parameters.AddWithValue("@_TimeStamp", DateTime.Now);
                 cmd.ExecuteNonQuery();
-
             }
-
-
         }
 
 

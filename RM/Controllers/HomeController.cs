@@ -13,36 +13,42 @@ namespace RM.Controllers
 {
     public class HomeController : Controller
     {
+       
+            public ActionResult Index()
+            {
 
-        public ActionResult Index()
-        {
+                return View();
+            }
+            public ActionResult Policies()
+            {
 
-            return View();
-        }
-        public ActionResult Policies()
-        {
+                return View();
+            }
 
-            return View();
-        }
+            public ActionResult DataTables()
+            {
 
-        public ActionResult DataTables()
-        {
-
-            return View();
-        }
+                return View();
+            }
 
 
-        public ActionResult LocalDistribution()
-        {
+            public ActionResult LocalDistribution()
+            {
 
-            return View();
-        }
+                return View();
+            }
 
-        public ActionResult ExportSales()
-        {
+            public ActionResult ExportSales()
+            {
 
-            return View();
-        }
+                return View();
+            }
+
+            public ActionResult Documents()
+            {
+
+                return View();
+            }
         public ActionResult Chat()
         {
             return View();
@@ -56,4 +62,4 @@ namespace RM.Controllers
             return View();
         }
     }
-}
+    }

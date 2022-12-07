@@ -1,0 +1,608 @@
+﻿@using PagedList;
+@using PagedList.Mvc;
+@using RM.Models;
+@model Inventory
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.PageName = "Inventory";
+}
+<link href="~/Scripts/jquery-ui-1.10.4.custom.min.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+    <script src="~/Scripts/jquery-1.10.2.js"></script>
+    <script src="~/Scripts/jquery-ui-1.10.4.custom.min.js"></script>
+
+<link rel="stylesheet" type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/ui-lightness/jquery-ui.css" />
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.js"></script>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1/jquery-ui.min.js"></script>
+
+<link href="~/css/jquery.multiselect.css" rel="stylesheet" />
+@*<link href="~/css/Style1.css" rel="stylesheet" />*@
+<link href="~/css/select2.min.css" rel="stylesheet" />
+
+
+
+<script type="text/javascript">
+    $m = jQuery.noConflict();
+    $(function () {
+        $('.edit-mode').hide();
+        $('.edit-Inventory, .cancel-Inventory').on('click', function () {
+            var tr = $(this).parents('tr:first');
+            tr.find('.edit-mode, .display-mode').toggle();
+        });
+        $('.save-Inventory').on('click', function () {
+            var tr = $(this).parents('tr:first');
+            var id = tr.attr('id');
+            var Loc = tr.find("#item_Loc").val();
+            var Loc = tr.find("#item_Item").val();
+            var Type = tr.find("#item_Type").val();
+            var Finish = tr.find("#item_Finish").val();
+            var Finish = tr.find("#item_Thickness").val();
+            var Gauge = tr.find("#item_Gauge").val();
+            var Width = tr.find('#item_Width').val();
+            var WTNET = tr.find('#item_WTNET').val();
+            //var NOOFPCS = tr.find('#item_NOOFPCS').val();
+            document.getElementById('L_' + id).innerHTML = Loc;
+            document.getElementById('I_' + id).innerHTML = Item;
+            document.getElementById('T_' + id).innerHTML = Type;
+            document.getElementById('F_' + id).innerHTML = Finish;
+            document.getElementById('TH_' + id).innerHTML = Thickness;
+            document.getElementById('G_' + id).innerHTML = Gauge;
+            document.getElementById('W_' + id).innerHTML = Width;
+            document.getElementById('WT_' + id).innerHTML = WTNET;
+            //document.getElementById('N_' + id).innerHTML = NOOFPCS;
+            tr.find('.edit-mode, .display-mode').toggle();
+            var Inventory =
+              {
+                  "Id": id,
+                  "Loc": Loc,
+                  "Item": Item,
+                  "Type": Type,
+                  "Finish": Finish,
+                  "Thickness": Thickness,
+                  "Gauge": Gauge,
+                  "Width": Width,
+                  "WTNET": WTNET//,
+                  //"NOOFPCS": NOOFPCS
+              };
+            $.ajax({
+                url: '/Inventory/Update/',
+                data: JSON.stringify(Inventory),
+                type: 'POST',
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                }
+            });
+
+        });
+        $('.delete-Inventory').on('click', function () {
+            if (!confirm('Are you sure you want to delete this record?'))
+            { return;}
+            var tr = $(this).parents('tr:first');
+            var id = tr.attr('id')
+            var Inventory =
+               {
+                   "Id": id
+               };
+            $.ajax({
+                url: '/Inventory/Delete/',
+                data: JSON.stringify(Inventory),
+                type: 'POST',
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    document.getElementById(id).style.display = 'none';
+                }
+            });
+        });
+
+
+        //clsRqid
+
+        $('#btnRequestQuoteHeader').on('click', function () {
+
+            //alert(1);
+            //true condition
+            var rqids = new Array();
+            $('#tableInventory tr ').find('.clsRqid:checked').each(function () {
+                rqids.push($(this).attr("rqid"));
+            });
+
+            if(rqids.length <= 0)
+            {
+                alert("No reqest Quotes are selected");
+                return;
+            }
+            else {
+                if (!confirm('Do you want to Request quote?'))
+                { return; }
+
+               // alert("ajax call started");
+                $.ajax({
+                    url: '/Inventory/BulkRequestQuote/',
+                    data: JSON.stringify(rqids),
+                    type: 'POST',
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (data) {
+                        //alert("success");
+                        $("#btnSearch").click();
+                    }
+                });
+            }
+
+
+        });
+    })
+</script>
+
+<script type="text/javascript">
+    $m(document).ready(function () {
+        $('#Pages').change(function () {
+
+            val = $(this).val();
+            if (val == 100) {
+
+                window.location.href = '@Html.Raw(@Url.Action("index", "Inventory", new { Pages = 100,
+                                       Loc = Model.Loc,
+                                       Item = Model.Item,
+                                       Type = Model.Type,
+                                       Finish = Model.Finish,
+                                       Thickness = Model.Thickness,
+                                       Gauge = Model.Gauge,
+                                       Width = Model.Width,
+                                       WTNET = Model.WTNET
+                                   }))'
+
+            }
+            else if (val == 150) {
+
+                window.location.href = '@Html.Raw(@Url.Action("index", "Inventory", new { Pages = 150,
+                                       Loc = Model.Loc,
+                                       Item = Model.Item,
+                                       Type = Model.Type,
+                                       Finish = Model.Finish,
+                                       Thickness = Model.Thickness,
+                                       Gauge = Model.Gauge,
+                                       Width = Model.Width,
+                                       WTNET = Model.WTNET
+                                   }))'
+      }
+      else {
+      window.location.href='@Html.Raw(@Url.Action("index", "Inventory", new { Pages = 50,
+                                       Loc = Model.Loc,
+                                       Item = Model.Item,
+                                       Type = Model.Type,
+                                       Finish = Model.Finish,
+                                       Thickness = Model.Thickness,
+                                       Gauge = Model.Gauge,
+                                       Width = Model.Width,
+                                       WTNET = Model.WTNET
+                                   }))'
+      }
+      });
+      });</script>
+
+
+
+<div class="col-md-12 col-sm-6 aboutus wow fadeInLeft animated">
+    <div class="bs-example" data-example-id="striped-table">
+        <div class="table-responsive">
+            <h2 class="wellcome">Inventory</h2>
+
+            @Html.ActionLink("Export To Excel", "Index", new
+       {
+           Export = 1,
+           Loc = Model.Loc,
+           Item = Model.Item,
+           Type = Model.Type,
+           Finish = Model.Finish,
+           Thickness = Model.Thickness,
+           Gauge = Model.Gauge,
+           Width = Model.Width,
+           WTNET = Model.WTNET,
+           Pages = Request.QueryString["Pages"],
+           sortOrder = Request["sortOrder"]
+       }, new { })  @* The Style should be added here to move it right *@
+
+            @if (Model != null)
+            {
+                @Html.PagedListPager(Model.IPagedProductsList, page => Url.Action("Index", new
+           {
+               page,
+               Loc = Model.Loc,
+               Item = Model.Item,
+               Type = Model.Type,
+               Finish = Model.Finish,
+               Thickness = Model.Thickness,
+               Gauge = Model.Gauge,
+               Width = Model.Width,
+               WTNET = Model.WTNET,
+               Pages = Request.QueryString["Pages"],
+               sortOrder = Request["sortOrder"]
+           }),
+            new PagedListRenderOptions() { Display = PagedListDisplayMode.IfNeeded })
+
+            }
+
+
+            <table class="table table-bordered table-hover" id="tableInventory">
+                <thead style="background-color:white;border:none">
+                    @using (Html.BeginForm("Index", "Inventory", new { Pages = ViewBag.Pages }, FormMethod.Post))
+                    {
+                        <tr>
+                            <th>
+                             
+
+
+                                @Html.DropDownListFor(model => model.Locs, Model.GetLocation(), new { @class = "form-control  listbox", @multiple = "multiple", @placeholder = "Locations" })
+                            </th>
+                            <th>
+                                @Html.DropDownListFor(model => model.Items, Model.GetItem(), new { @class = "form-control  select2-multiple listbox", @multiple = "multiple", @placeholder = "Locations" })
+                            </th>
+                            <th>
+                                @Html.DropDownListFor(model => model.Types, Model.GetType(), new { @class = "form-control   select2-multiple listbox", @multiple = "multiple", @placeholder = "Locations" })
+                            </th>
+                            <th>
+                                @Html.DropDownListFor(model => model.Finishs, Model.GetFinish(), new { @class = "form-control  select2-multiple listbox", @multiple = "multiple", @placeholder = "Locations", style = "width: 100px;" })
+                            </th>
+                            <th>
+                                @Html.DropDownListFor(model => model.Thicknesss, Model.GetThickness(), new { @class = "form-control  select2-multiple listbox", @multiple = "multiple", @placeholder = "Locations", style = "width: 100px;" })
+                            </th>
+                            <th>
+                                @Html.DropDownListFor(model => model.Gauges, Model.GetGauge(), new { @class = "form-control  select2-multiple listbox", @multiple = "multiple", @placeholder = "Locations" })
+                            </th>
+                            <th>
+                                @Html.DropDownListFor(model => model.Widths, Model.GetWidth(), new { @class = "form-control  select2-multiple listbox", @multiple = "multiple", @placeholder = "Locations" })
+                            </th>
+                            <th>
+                                @Html.DropDownListFor(model => model.WTNETs, Model.GetWTNET(), new { @class = "form-control  select2-multiple listbox", @multiple = "multiple", @placeholder = "Locations" })
+                            </th>
+                            <th>
+                                @Html.DropDownList("Pages", ViewBag.ListItems as IEnumerable<SelectListItem>, new { @class = "form-control" })
+                            </th>
+                            <th>
+                                <input type="submit" id="btnSearch" name="submit" value="search" class="btn btn-default signin"  />
+                            </th>
+
+                        </tr>
+                    }
+                </thead>
+                <tr style="border:none;">
+                    <td colspan="9" style="border:none;"></td>
+                </tr>
+                @if (Model.ProductList.Count > 0)
+                {
+                    <thead>
+                        <tr>
+
+                            <th>
+                                @Html.ActionLink("Location", "Index", new
+                       {
+                           Pages = ViewBag.Pages,
+                           sortOrder = ViewBag.LocSortParm,
+                           Loc = Model.Loc,
+                           Item = Model.Item,
+                           Type = Model.Type,
+                           Finish = Model.Finish,
+                           Thickness = Model.Thickness,
+                           Gauge = Model.Gauge,
+                           Width = Model.Width,
+                           WTNET = Model.WTNET
+                       }, new { style = "color:white" })
+                            </th>
+                            <th>
+                                @Html.ActionLink("Item", "Index", new
+                       {
+                           Pages = ViewBag.Pages,
+                           sortOrder = ViewBag.LocSortParm,
+                           Loc = Model.Loc,
+                           Item = Model.Item,
+                           Type = Model.Type,
+                           Finish = Model.Finish,
+                           Thickness = Model.Thickness,
+                           Gauge = Model.Gauge,
+                           Width = Model.Width,
+                           WTNET = Model.WTNET
+                       }, new { style = "color:white" })
+                            </th>
+                            <th>
+                                @Html.ActionLink("Type", "Index", new
+                       {
+                           Pages = ViewBag.Pages,
+                           sortOrder = ViewBag.TypeSortParm,
+                           Loc = Model.Loc,
+                           Item = Model.Item,
+                           Type = Model.Type,
+                           Finish = Model.Finish,
+                           Thickness = Model.Thickness,
+                           Gauge = Model.Gauge,
+                           Width = Model.Width,
+                           WTNET = Model.WTNET
+                       }, new { style = "color:white" })
+                            </th>
+                            <th>
+                                @Html.ActionLink("Finish", "Index", new
+                       {
+                           Pages = ViewBag.Pages,
+                           sortOrder = ViewBag.FinishSortParm,
+                           Loc = Model.Loc,
+                           Item = Model.Item,
+                           Type = Model.Type,
+                           Finish = Model.Finish,
+                           Thickness = Model.Thickness,
+                           Gauge = Model.Gauge,
+                           Width = Model.Width,
+                           WTNET = Model.WTNET
+                       }, new { style = "color:white" })
+                            </th>
+                            <th>
+                                @Html.ActionLink("Thickness", "Index", new
+                       {
+                           Pages = ViewBag.Pages,
+                           sortOrder = ViewBag.LocSortParm,
+                           Loc = Model.Loc,
+                           Item = Model.Item,
+                           Type = Model.Type,
+                           Finish = Model.Finish,
+                           Thickness = Model.Thickness,
+                           Gauge = Model.Gauge,
+                           Width = Model.Width,
+                           WTNET = Model.WTNET
+                       }, new { style = "color:white" })
+                            </th>
+                            <th>
+                                @Html.ActionLink("Gauge", "Index", new
+                       {
+                           Pages = ViewBag.Pages,
+                           sortOrder = ViewBag.GaugeSortParm,
+                           Loc = Model.Loc,
+                           Item = Model.Item,
+                           Type = Model.Type,
+                           Finish = Model.Finish,
+                           Thickness = Model.Thickness,
+                           Gauge = Model.Gauge,
+                           Width = Model.Width,
+                           WTNET = Model.WTNET
+                       }, new { style = "color:white" })
+                            </th>
+                            <th>
+                                @Html.ActionLink("Width", "Index", new
+                       {
+                           Pages = ViewBag.Pages,
+                           sortOrder = ViewBag.WidthSortParm,
+                           Loc = Model.Loc,
+                           Item = Model.Item,
+                           Type = Model.Type,
+                           Finish = Model.Finish,
+                           Thickness = Model.Thickness,
+                           Gauge = Model.Gauge,
+                           Width = Model.Width,
+                           WTNET = Model.WTNET
+                       }, new { style = "color:white" })
+                            </th>
+                            <th>
+                                @Html.ActionLink("Net Wt", "Index", new
+                       {
+                           Pages = ViewBag.Pages,
+                           sortOrder = ViewBag.WTNETSortParm,
+                           Loc = Model.Loc,
+                           Item = Model.Item,
+                           Type = Model.Type,
+                           Finish = Model.Finish,
+                           Thickness = Model.Thickness,
+                           Gauge = Model.Gauge,
+                           Width = Model.Width,
+                           WTNET = Model.WTNET
+                       }, new { style = "color:white" })
+                            </th>
+                            @*<th>
+                                @Html.ActionLink("Pieces", "Index", new
+                       {
+                           Pages = ViewBag.Pages,
+                           sortOrder = ViewBag.NOOFPCSSortParm,
+                           Loc = Model.Loc,
+                           Item = Model.Item,
+                           Type = Model.Type,
+                           Finish = Model.Finish,
+                           Thickness = Model.Thickness,
+                           Gauge = Model.Gauge,
+                           Width = Model.Width,
+                           WTNET = Model.WTNET
+                       }, new { style = "color:white" })
+                            </th>*@
+                            @if (User.Identity.IsAuthenticated)
+                            {
+                                <th>
+
+                                    <input type="button" value="Request quote" class="btn btn-success" style="border-radius:15px" id="btnRequestQuoteHeader" />
+                                </th>
+                            }
+                        </tr>
+                    </thead>
+                }
+                @if (Model != null)
+                {
+                    foreach (var item in Model.IPagedProductsList)
+                    {
+                        <tbody>
+                            <tr id=@item.Id>
+                                <td style="width:50px">
+                                    <span class="display-mode" id="L_@item.Id" style="width:50px">
+                                        @Html.DisplayFor(modelItem => item.Loc)
+                                    </span>
+                                    @Html.TextBoxFor(modelItem => item.Loc, new { @class = "listbox", style = "width:50px" })
+                                </td>
+                                <td style="width:50px">
+                                    <span class="display-mode" id="I_@item.Id" style="width:50px">
+                                        @Html.DisplayFor(modelItem => item.Item)
+                                    </span>
+                                    @Html.TextBoxFor(modelItem => item.Item, new { @class = "edit-mode", style = "width:50px" })
+                                </td>
+                                <td>
+                                    <span class="display-mode" style="width:50px" id="T_@item.Id">
+                                        @Html.DisplayFor(modelItem => item.Type)
+                                    </span>
+                                    @Html.TextBoxFor(m => item.Type, new { @class = "edit-mode", style = "width:75px" })
+
+                                </td>
+                                <td>
+                                    <span class="display-mode" style="width:50px" id="F_@item.Id">
+                                        @Html.DisplayFor(m => item.Finish)
+                                    </span>
+                                    @Html.TextBoxFor(m => item.Finish, new { @class = "edit-mode", style = "width:50px" })
+                                </td>
+                                <td>
+                                    <span class="display-mode" style="width:50px" id="TH_@item.Id">
+                                        @Html.DisplayFor(m => item.Thickness)
+                                    </span>
+                                    @Html.TextBoxFor(m => item.Thickness, new { @class = "edit-mode", style = "width:50px" })
+                                </td>
+                                <td>
+                                    <span class="display-mode" style="width:50px" id="G_@item.Id">
+                                        @Html.DisplayFor(m => item.Gauge)
+                                    </span>
+                                    @Html.TextBoxFor(m => item.Gauge, new { @class = "edit-mode", style = "width:50px" })
+                                </td>
+                                <td>
+                                    <span class="display-mode" style="width:50px" id="W_@item.Id">
+                                        @Html.DisplayFor(m => item.Width)
+                                    </span>
+                                    @Html.TextBoxFor(m => item.Width, new { @class = "edit-mode", style = "width:50px" })
+                                </td>
+                                <td>
+                                    <span class="display-mode" style="width:50px" id="WT_@item.Id">
+                                        @Html.DisplayFor(m => item.WTNET)
+                                    </span>
+                                    @Html.TextBoxFor(m => item.WTNET, new { @class = "edit-mode", style = "width:50px" })
+                                </td>
+                                @*<td>
+                                    <span class="display-mode" style="width:50px" id="N_@item.Id">
+                                        @Html.DisplayFor(modelItem => item.NOOFPCS)
+                                    </span>
+                                    @Html.TextBoxFor(m => item.NOOFPCS, new { @class = "edit-mode", style = "width:50px" })
+                                </td>*@
+                                @if (User.Identity.IsAuthenticated)
+                                {
+                                    <td align="center">
+
+
+                                        <input type="checkbox" style="width:20px;height:20px;" rqid="@item.Id.ToString()" class="clsRqid btn btn-default signin" />
+
+                                        @*<input type="button" style="width:20px;height:20px;" value="Request quote" class="btn btn-default signin" id="btnRequestQuote" onclick="if (confirm('Do you want to Request quote?'))
+                                               { window.location.href='@Html.Raw(@Url.Action("index", "Inventory", new { Id = item.Id,
+                            Pages = Request.QueryString["Pages"],
+                          sortOrder = Request["sortOrder"],
+                           Loc = Model.Loc,
+                           Type = Model.Type,
+                           Finish = Model.Finish,
+                           Gauge = Model.Gauge,
+                           Width = Model.Width,
+                           WTNET = Model.WTNET }))' }" />*@
+
+                                    </td>
+                                }
+
+                            </tr>
+                        </tbody>
+                    }
+                }
+
+            </table>
+           
+
+
+            @if (Model != null)
+            {
+                @Html.PagedListPager(Model.IPagedProductsList, page => Url.Action("Index", new
+           {
+               page,
+               Loc = Model.Loc,
+               Item = Model.Item,
+               Type = Model.Type,
+               Finish = Model.Finish,
+               Thickness = Model.Thickness,
+               Gauge = Model.Gauge,
+               Width = Model.Width,
+               WTNET = Model.WTNET,
+               Pages = Request.QueryString["Pages"],
+               sortOrder = Request["sortOrder"]
+           }),
+            new PagedListRenderOptions() { Display = PagedListDisplayMode.IfNeeded })
+
+            }
+
+        </div>
+    </div>
+</div>
+<style>
+    /*select,
+.select2 {
+    width: 90%;
+    margin: 0 auto;
+    border-radius: 0 !important;
+    display: block;
+}*/
+.select2-container .select2-selection {
+    height: 40px;
+    overflow-y: scroll;
+} 
+.select2-selection__choice {
+  color: black;
+}
+</style>
+
+<script>
+
+    $(function () {
+        var jsmodel = @Html.Raw(Json.Encode(Model));
+        debugger;
+      //  $('#Locs').select2({ placeholder: "Locations" ,multiple:true});
+        //$('#Items').select2({ placeholder: "Items" });
+        $('#Types').select2({ placeholder: "Types" });
+        $('#Finishs').select2({ placeholder: "Finishs" });
+      //  $('#Thicknesss').select2({ placeholder: "Thicknesss" });
+        $('#Gauges').select2({ placeholder: "Gauges" });
+        $('#Widths').select2({ placeholder: "Widths" });
+        $('#WTNETs').select2({ placeholder: "WTNETs" });
+
+
+        //$('#Locs').val(jsmodel.Locs).trigger("change");
+       // $('#Items').val(jsmodel.Items).trigger("change");
+        $('#Types').val(jsmodel.Types).trigger("change");
+        $('#Finishs').val(jsmodel.Finishs).trigger("change");
+       // $('#Thicknesss').val(jsmodel.Thicknesss).trigger("change");
+        $('#Gauges').val(jsmodel.Gauges).trigger("change");
+        $('#Widths').val(jsmodel.Widths).trigger("change");
+        $('#WTNETs').val(jsmodel.WTNETs).trigger("change");
+
+
+        //$("#btnSearchVisible").click(function () {
+        //    //var Locs = "";
+        //    //var v = $('#Loc').select2('data');
+        //    //v.forEach(function (d) {
+        //    //    Locs = Locs + "," + d.text;
+        //    //});
+
+        //    //debugger;
+        //    //$("#Loc").val(Locs);
+        //    $("#btnSearch").click();
+        //});
+    });
+
+    </script>  
+<script src="~/js/jquery.multiselect.min.js"></script>
+@*<script>
+    $(".listbox").multiselect({
+        header: "Choose an Option!"
+    });$("select").multiselect({
+        selectedText: "# of # selected"
+    });
+
+
+</script>*@
+
+<script type="text/javascript">
+    $(function(){
+        $("select").multiselect();
+    });
+</script>
+<script src="~/js/jquery.multiselect.js"></script>

@@ -27,6 +27,10 @@
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
     <TargetFrameworkProfile />
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
     <Use64BitIISExpress />
     <TypeScriptToolsVersion>4.3</TypeScriptToolsVersion>
   </PropertyGroup>
@@ -48,6 +52,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="LumenWorks.Framework.IO, Version=3.9.1.0, Culture=neutral, PublicKeyToken=5ad3ea2f85776344, processorArchitecture=MSIL">
+      <HintPath>..\packages\LumenWorksCsvReader.3.9.1\lib\net20\LumenWorks.Framework.IO.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.AI.Agent.Intercept, Version=1.2.0.1011, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.ApplicationInsights.Agent.Intercept.1.2.0\lib\net45\Microsoft.AI.Agent.Intercept.dll</HintPath>
       <Private>True</Private>
@@ -76,7 +84,7 @@
       <HintPath>..\packages\Microsoft.ApplicationInsights.1.2.3\lib\net45\Microsoft.ApplicationInsights.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Microsoft.AspNet.SignalR.Core, Version=2.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+	  <Reference Include="Microsoft.AspNet.SignalR.Core, Version=2.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.SignalR.Core.2.2.0\lib\net45\Microsoft.AspNet.SignalR.Core.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.AspNet.SignalR.SystemWeb, Version=2.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -87,7 +95,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Microsoft.Owin, Version=4.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+	<Reference Include="Microsoft.Owin, Version=4.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Owin.4.0.1\lib\net45\Microsoft.Owin.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Owin.Host.HttpListener, Version=2.0.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -136,7 +144,7 @@
       <HintPath>..\packages\MySql.Web.6.9.8\lib\net45\MySql.Web.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+	  <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.10.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="PagedList, Version=1.17.0.0, Culture=neutral, PublicKeyToken=abbb863e9397c5e1, processorArchitecture=MSIL">
@@ -151,7 +159,7 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Drawing" />
-    <Reference Include="System.Net.Http.Formatting, Version=5.2.9.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+	<Reference Include="System.Net.Http.Formatting, Version=5.2.9.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.9\lib\net45\System.Net.Http.Formatting.dll</HintPath>
     </Reference>
     <Reference Include="System.Security" />
@@ -160,7 +168,7 @@
     <Reference Include="System.Web.ApplicationServices" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Web.Extensions" />
-    <Reference Include="System.Web.Http, Version=5.2.9.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+	  <Reference Include="System.Web.Http, Version=5.2.9.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.2.9\lib\net45\System.Web.Http.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.Http.Owin, Version=5.2.9.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -227,7 +235,7 @@
       <Private>True</Private>
     </Reference>
   </ItemGroup>
-  <ItemGroup>
+  <ItemGroup>   
     <Reference Include="EntityFramework">
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
@@ -245,7 +253,7 @@
     </Reference>
     <Reference Include="Owin">
       <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
-    </Reference>
+    </Reference>   
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\BundleConfig.cs" />
@@ -256,8 +264,8 @@
     <Compile Include="ChatHub.cs" />
     <Compile Include="Common\Helper.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\BlogController.cs" />
-    <Compile Include="Controllers\DefaultController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\InventoryController.cs" />
@@ -271,16 +279,18 @@
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\BlogPost.cs" />
     <Compile Include="Models\Chat\ChatRequestUser.cs" />
     <Compile Include="Models\Chat\MessageDetail.cs" />
     <Compile Include="Models\Chat\UserDetail.cs" />
-    <Compile Include="Models\BlogPost.cs" />
     <Compile Include="Models\ContactRequest.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\Inventory.cs" />
     <Compile Include="Models\FilterData.cs" />
     <Compile Include="Models\MessageInfo.cs" />
+    <Compile Include="Models\Product.cs" />
+    <Compile Include="Models\Products.cs" />
     <Compile Include="Models\RequestedQuote.cs" />
     <Compile Include="Models\SearchedData.cs" />
     <Compile Include="Models\TextEditor.cs" />
@@ -307,10 +317,13 @@
     <Content Include="Content\PagedList.css" />
     <Content Include="Content\style.css" />
     <Content Include="css\animate.css" />
+    <Content Include="css\bootstrap-multiselect.css" />
     <Content Include="css\bootstrap.min.css" />
+    <Content Include="css\bootstrap3.3.7.min.css" />
     <Content Include="css\ChatStyle.css" />
     <Content Include="css\font-awesome.min.css" />
     <Content Include="css\jquery.bxslider.css" />
+    <Content Include="css\jquery.multiselect.css" />
     <Content Include="css\JQueryUI\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
     <Content Include="css\JQueryUI\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />
     <Content Include="css\JQueryUI\themes\base\images\ui-bg_glass_55_fbf9ee_1x400.png" />
@@ -434,11 +447,16 @@
     <Content Include="css\JQueryUI\themes\ui-lightness\minified\jquery.ui.theme.min.css" />
     <Content Include="css\JQueryUI\themes\ui-lightness\minified\jquery.ui.tooltip.min.css" />
     <Content Include="css\owl.carousel.css" />
+    <Content Include="css\prettify.css" />
+    <Content Include="css\select2.min.css" />
     <Content Include="css\style.css" />
+    <Content Include="css\Style1.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="images\about.jpg" />
+    <Content Include="images\about_us.jpg" />
     <Content Include="images\about_us.png" />
     <Content Include="images\abou_inner.jpg" />
     <Content Include="images\animated-overlay.gif" />
@@ -453,7 +471,6 @@
     <Content Include="images\client7.jpg" />
     <Content Include="images\client8.jpg" />
     <Content Include="images\client9.jpg" />
-    <Content Include="images\delete.png" />
     <Content Include="images\downloadbutton.png" />
     <Content Include="images\email_icon.png" />
     <Content Include="images\export1.jpg" />
@@ -490,11 +507,20 @@
     <Content Include="images\ui-icons_454545_256x240.png" />
     <Content Include="images\ui-icons_888888_256x240.png" />
     <Content Include="images\ui-icons_cd0a0a_256x240.png" />
+    <Content Include="js\bootstrap-multiselect.js" />
     <Content Include="js\bootstrap.js" />
     <Content Include="js\bootstrap.min.js" />
+    <Content Include="js\bootstrap3.3.7.min.js" />
     <Content Include="js\jquery.bxslider.min.js" />
+    <Content Include="js\jquery.multiselect.js" />
+    <Content Include="js\jquery.multiselect.min.js" />
+    <Content Include="js\jsBootstrapMultiselect.js" />
     <Content Include="js\owl.carousel.js" />
+    <Content Include="js\prettify.js" />
+    <Content Include="js\select2.min.js" />
+    <Content Include="js\select2.multiselect.js" />
     <Content Include="js\smoothscroll.js" />
+    <Content Include="robots.txt" />
     <Content Include="Scripts\ai.0.15.0-build58334.js" />
     <Content Include="Scripts\ai.0.15.0-build58334.min.js" />
     <Content Include="Scripts\bootstrap.js" />
@@ -507,7 +533,9 @@
     <Content Include="Content\fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.eot" />
     <Content Include="RM_METALS_BROCHURE.pdf" />
+    <Content Include="CUSTOMER REJECTION FORM.docx" />
     <None Include="Properties\PublishProfiles\WebProfile.pubxml" />
+    <Content Include="RM - Credit Application from Customer.xlsx" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
@@ -649,7 +677,10 @@
     <Content Include="Scripts\ui\jquery.ui.resizable.js" />
     <Content Include="Scripts\ui\jquery.ui.widget.js" />
     <Content Include="Scripts\_references.js" />
-    <Content Include="Web.config" />
+    <Content Include="sitemap.xml" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
@@ -691,12 +722,20 @@
     <Content Include="Views\Home\DataTables.cshtml" />
     <Content Include="Views\Home\LocalDistribution.cshtml" />
     <Content Include="Views\Home\Policies.cshtml" />
-    <Content Include="Views\Home\Chat.cshtml" />
-    <Content Include="Views\Home\PrivateChat.cshtml" />
-    <Content Include="Views\Home\NewPost.cshtml" />
-    <Content Include="Scripts\tinymce\langs\README.md" />
-    <Content Include="Views\Blog\Index.cshtml" />
+    <Content Include="Views\Inventory\Approval.cshtml" />
+    <Content Include="Views\Inventory\InActive.cshtml" />
+    <Content Include="Views\Home\Index1.cshtml" />
+    <Content Include="Views\Inventory\Index - Copy.cshtml" />
+    <Content Include="Views\Admin\Index.cshtml" />
+    <Content Include="Views\Home\Documents.cshtml" />
+    <Content Include="Views\Shared\_Layout_backup.cshtml" />
+    <Content Include="Views\Inventory\Index_backup.cshtml" />
     <Content Include="Views\Blog\Create.cshtml" />
+    <Content Include="Views\Blog\Index.cshtml" />
+    <Content Include="Scripts\tinymce\langs\README.md" />
+    <Content Include="Views\Home\Chat.cshtml" />
+    <Content Include="Views\Home\NewPost.cshtml" />
+    <Content Include="Views\Home\PrivateChat.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -715,10 +754,10 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
+    <TypeScriptCompile Include="Scripts\tinymce\tinymce.d.ts" />
   </ItemGroup>
   <ItemGroup>
-    <TypeScriptCompile Include="Scripts\tinymce\tinymce.d.ts" />
+    <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
@@ -755,7 +794,7 @@
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\Microsoft.Net.Compilers.1.0.0\build\Microsoft.Net.Compilers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Net.Compilers.1.0.0\build\Microsoft.Net.Compilers.props'))" />
     <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.0\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.0\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
-    <Error Condition="!Exists('..\packages\TinyMCE.6.3.0\build\TinyMCE.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\TinyMCE.6.3.0\build\TinyMCE.targets'))" />
+	<Error Condition="!Exists('..\packages\TinyMCE.6.3.0\build\TinyMCE.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\TinyMCE.6.3.0\build\TinyMCE.targets'))" />
   </Target>
   <Import Project="..\packages\TinyMCE.6.3.0\build\TinyMCE.targets" Condition="Exists('..\packages\TinyMCE.6.3.0\build\TinyMCE.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

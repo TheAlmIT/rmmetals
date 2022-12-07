@@ -1,7 +1,7 @@
 @font-face {
   font-family: 'Glyphicons Halflings';
   src: url('../fonts/glyphicons-halflings-regular.eot');
-  src: url('../fonts/glyphicons-halflings-regular.eot?#iefix') format('embedded-opentype'), url('../fonts/glyphicons-halflings-regular.woff') format('woff'), url('../fonts/glyphicons-halflings-regular.ttf') format('truetype'), url('../fonts/glyphicons-halflings-regular.svg#glyphicons-halflingsregular') format('svg');
+  src: url('../fonts/glyphicons-halflings-regular.eot?#iefix') format('embedded-opentype'), url('/fonts/glyphicons-halflings-regular.woff') format('woff'), url('../fonts/glyphicons-halflings-regular.ttf') format('truetype'), url('../fonts/glyphicons-halflings-regular.svg#glyphicons-halflingsregular') format('svg');
 }
 body {
 	font-family:'Open Sans', sans-serif;
@@ -38,7 +38,9 @@ h6 {
 	display: none;
 }
 .heade_bg {
-	background:#ffffff;
+    
+/*-- #C0C0C0--*/
+	background:#c6c6c6;
 	box-shadow:0px 0px 3px;
 }
 
@@ -75,6 +77,7 @@ h6 {
 	color: #666666;
 	margin-left: 10px;
 	margin-right: 0;
+
 }
 .top-info li.social-icon i:hover{
 	color: #8c1b1e;
@@ -154,6 +157,7 @@ ul.navbar-nav li.active > a,
 ul.navbar-nav > li.active.dropdown.open{
 	background: rgba(5, 6, 118, 1);
 	color:#ffffff;
+	/*border-radius:10px;*/
 }
 
 ul.navbar-nav li.active > .dropdown-menu > li.active > a{
@@ -167,7 +171,7 @@ ul.navbar-nav li.active > .dropdown-menu > li.active > a{
 	right: auto;
 }
 .navbar-nav {
-	margin-top:30px;
+	margin-top:47px;
 }
 .dropdown-menu * {
 	width: 100%;
@@ -359,7 +363,7 @@ ul.navbar-nav li.active > .dropdown-menu > li.active > a{
 	font-size:30px;
 	font-weight: 100;
 	text-transform: uppercase;
-	/*background:rgba(231, 135, 19, 0.7);*/
+	background:rgba(119, 116, 111, 0.7);
 	margin: 0 auto;
 	width:72%;
 	padding:50px;
@@ -564,6 +568,7 @@ ul.navbar-nav li.active > .dropdown-menu > li.active > a{
 }
 .aboutusmain {
 	margin-top:10px;
+    padding-bottom: 20px;
 }
 .wellcome {
 	color:#f7941d;
@@ -583,7 +588,7 @@ ul.navbar-nav li.active > .dropdown-menu > li.active > a{
 }
 
 #service_bottom {
-	background:#fff;
+	background:#EEE;
 	padding-bottom:30px;
 }
 blockquote {
@@ -614,8 +619,6 @@ blockquote p{
 	padding-bottom:35px;
 	padding-top:15px;
 }
-
-
 
 /*-- Footer common --*/
 
@@ -822,7 +825,7 @@ h3.footer-title:after{
 }
 
 .copyright-info a{
-	color: #6e1518;
+	color: #f8f8ff;
 	font-weight: 700;
 }
 .copyright-info a:hover{

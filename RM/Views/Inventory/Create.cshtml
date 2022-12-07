@@ -3,29 +3,37 @@
     ViewBag.Title = "Create";
     ViewBag.PageName = "Admin";
 }
-
+<style>
+       body{
+         background: rgb(180, 180, 180); 
+ } 
+</style>
 
 @using (Html.BeginForm("Create", "Inventory", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
-    <div class="col-md-12 col-sm-6 aboutus wow fadeInLeft animated">
+    <div class="col-md-12 col-sm-6 aboutus wow fadeInLeft animated" style="background: rgb(221, 221, 221)">
         <div class="bs-example" data-example-id="striped-table">
 
             @if (ViewBag.ShowData != null)
             {
-                <h3>@ViewBag.ShowData has Uploaded</h3>
+                <h3>@ViewBag.ShowData Rows has been Uploaded</h3>
             }
-            <h2 class="wellcome">Upload your excel file here</h2>
+            <h2 class="wellcome">Upload your Inventory CSV file here</h2>
 
             <div style="position:relative;margin-bottom:15px ">
                 <a class='btn btn-primary' href='javascript:;'>
                     Choose File...
-                    <input type="file" name="file" style='position:absolute;z-index:2;top:0;left:0;filter: alpha(opacity=0);-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";opacity:0;background-color:transparent;color:transparent;' name="file_source" size="40" onchange='$("#upload-file-info").html($(this).val());'>
+                    <input type="file" name="file" accept=".csv" style='position:absolute;z-index:2;top:0;left:0;filter: alpha(opacity=0);-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";opacity:0;background-color:transparent;color:transparent;' name="file_source" size="40" onchange='    $("#upload-file-info").html($(this).val());'>
                 </a>
                 &nbsp;
                 <span class='label label-info' id="upload-file-info"></span>
 
             </div>
             <input type="submit" value="Submit" class="btn btn-default signin upload" />
+        </div>
+
+        <div id="HideError">
+            @Html.ValidationMessage("File", new { @class = "text-danger" })
         </div>
     </div>
 }
