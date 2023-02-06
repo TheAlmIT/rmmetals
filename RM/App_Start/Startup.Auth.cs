@@ -60,8 +60,8 @@ namespace RM
 
             app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions()
             {
-                ClientId = "109958978267-1qco5qlikgs048cjmlm0fa4mkahd9md9.apps.googleusercontent.com",
-                ClientSecret = "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"
+                ClientId = "589891585994-v8nkelne0jgm9o2psf1gpcvcat32pm0q.apps.googleusercontent.com",
+                ClientSecret = "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"
             });
         }
     }

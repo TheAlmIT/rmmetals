@@ -61,5 +61,9 @@ namespace RM.Controllers
         {
             return View();
         }
+        public ActionResult ActivationPending()
+        {
+            return View();
+        }
     }
     }
