@@ -21,6 +21,8 @@ using System.Web.UI;
 using System.Web.Configuration;
 using LumenWorks.Framework.IO.Csv;
 using System.Web.Security;
+using RM.Common;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Tab;
 
 namespace RM.Controllers
 {
@@ -66,18 +68,24 @@ namespace RM.Controllers
                 quote.product = quote.product.productDetails(Id.Value);
                 quote.insert(quote);
 
-                var smtpClient = new SmtpClient();
+                //var smtpClient = new SmtpClient();
                 string fromEmailId = System.Configuration.ConfigurationManager.AppSettings["SystemEmailId"];
                 string toEmailId = System.Configuration.ConfigurationManager.AppSettings["RequestQuoteToEmailId"];
 
-                var message = new MailMessage(fromEmailId, toEmailId)
+                //var message = new MailMessage(fromEmailId, toEmailId)
+                //{
+                //    Subject = "Requested Quote",
+                //    Body = "User Name : " + User.Identity.GetUserName() + Environment.NewLine + "Phone Number : " + quote.PhoneNumber + Environment.NewLine + "IP Address : " + Request.ServerVariables["REMOTE_ADDR"] + Environment.NewLine + "Location : " + quote.product.Loc + Environment.NewLine + "Type : " + quote.product.Type + Environment.NewLine + "Finish : " + quote.product.Finish + Environment.NewLine + "Gauge : " + quote.product.Gauge + Environment.NewLine + "Width : " + quote.product.Width + Environment.NewLine + "Net Wt : " + quote.product.WTNET + Environment.NewLine + "Pieces : " + quote.product.NOOFPCS,
+
+                //};
+                //smtpClient.Send(message);
+                var body = "User Name : " + User.Identity.GetUserName() + Environment.NewLine + "Phone Number : " + quote.PhoneNumber + Environment.NewLine + "IP Address : " + Request.ServerVariables["REMOTE_ADDR"] + Environment.NewLine + "Location : " + quote.product.Loc + Environment.NewLine + "Type : " + quote.product.Type + Environment.NewLine + "Finish : " + quote.product.Finish + Environment.NewLine + "Gauge : " + quote.product.Gauge + Environment.NewLine + "Width : " + quote.product.Width + Environment.NewLine + "Net Wt : " + quote.product.WTNET + Environment.NewLine + "Pieces : " + quote.product.NOOFPCS;
+
+               var mailResults= EmailHelper.SendEmail(toEmailId, "Requested Quote", body, true, fromEmailId);
+                if (!string.IsNullOrEmpty(mailResults))
                 {
-                    Subject = "Requested Quote",
-                    Body = "User Name : " + User.Identity.GetUserName() + Environment.NewLine + "Phone Number : " + quote.PhoneNumber + Environment.NewLine + "IP Address : " + Request.ServerVariables["REMOTE_ADDR"] + Environment.NewLine + "Location : " + quote.product.Loc + Environment.NewLine + "Type : " + quote.product.Type + Environment.NewLine + "Finish : " + quote.product.Finish + Environment.NewLine + "Gauge : " + quote.product.Gauge + Environment.NewLine + "Width : " + quote.product.Width + Environment.NewLine + "Net Wt : " + quote.product.WTNET + Environment.NewLine + "Pieces : " + quote.product.NOOFPCS,
-
-                };
-                smtpClient.Send(message);
-
+                    ModelState.AddModelError("Mail Error", mailResults);
+                }
             }
 
             if (Export.HasValue)
@@ -439,16 +447,22 @@ namespace RM.Controllers
 
                 var user = Allusers.Users.Where(a => a.UserId == UserId).Single();
 
-                var smtpClient = new SmtpClient();
+                //var smtpClient = new SmtpClient();
                 string fromEmailId = System.Configuration.ConfigurationManager.AppSettings["SystemEmailId"];
 
-                var message = new MailMessage(fromEmailId, user.Email)
+                //var message = new MailMessage(fromEmailId, user.Email)
+                //{
+                //    Subject = "Registration Approved",
+                //    Body = "Hello " + user.Name + Environment.NewLine + "You registration is approved by Admin, now you can login to the system. Please click <a href='http://www.rm-metals.com/rm-metals/Account/Login'>here</a>."
+                //};
+                //message.IsBodyHtml = true;
+                //smtpClient.Send(message);
+                var body = "Hello " + user.Name + Environment.NewLine + "You registration is approved by Admin, now you can login to the system. Please click <a href='http://www.rm-metals.com/rm-metals/Account/Login'>here</a>.";
+                var mailResults = EmailHelper.SendEmail(user.Email, "Registration Approved", body, true, fromEmailId);
+                if (!string.IsNullOrEmpty(mailResults))
                 {
-                    Subject = "Registration Approved",
-                    Body = "Hello " + user.Name + Environment.NewLine + "You registration is approved by Admin, now you can login to the system. Please click <a href='http://www.rm-metals.com/rm-metals/Account/Login'>here</a>."
-                };
-                message.IsBodyHtml = true;
-                smtpClient.Send(message);
+                    ModelState.AddModelError("Mail Error", mailResults);
+                }
             }
             Allusers.Users = Allusers.GetUsers();
             return View(Allusers.Users.Where(a => a.Approved == false));

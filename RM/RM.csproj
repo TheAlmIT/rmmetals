@@ -16,7 +16,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>RM</RootNamespace>
     <AssemblyName>RM</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort />
@@ -262,6 +262,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="ChatHub.cs" />
+    <Compile Include="Common\EmailHelper.cs" />
     <Compile Include="Common\Helper.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AdminController.cs" />
@@ -756,6 +757,7 @@
     <Content Include="Views\Home\NewPost.cshtml" />
     <Content Include="Views\Home\PrivateChat.cshtml" />
     <Content Include="Views\Shared\_PrivateChat.cshtml" />
+    <Content Include="Views\Home\ActivationPending.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -10,6 +10,10 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using RM.Models;
 using System.Net.Mail;
+using System.Configuration;
+using System.Net.Configuration;
+using System.Net;
+using RM.Common;
 
 namespace RM.Controllers
 {
@@ -23,7 +27,7 @@ namespace RM.Controllers
         {
         }
 
-        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager )
+        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager)
         {
             UserManager = userManager;
             SignInManager = signInManager;
@@ -35,9 +39,9 @@ namespace RM.Controllers
             {
                 return _signInManager ?? HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
             }
-            private set 
-            { 
-                _signInManager = value; 
+            private set
+            {
+                _signInManager = value;
             }
         }
 
@@ -77,30 +81,30 @@ namespace RM.Controllers
             // This doesn't count login failures towards account lockout
             // To enable password failures to trigger account lockout, change to shouldLockout: true
             var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
-            
-            if(result == SignInStatus.Success)
+
+            if (result == SignInStatus.Success)
             {
-                var user = await UserManager.FindByEmailAsync(model.Email);                
-                if(user.Approved == false)
+                var user = await UserManager.FindByEmailAsync(model.Email);
+                if (user.Approved == false)
                 {
                     AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
-                    ModelState.AddModelError("Email", "Please wait for Admin Approval");                    
+                    ModelState.AddModelError("Email", "Please wait for Admin Approval");
                     result = SignInStatus.Failure;
                     return View(model);
-                } 
-                            
+                }
+
             }
-           
+
 
             switch (result)
             {
                 case SignInStatus.Success:
                     var user = await UserManager.FindByEmailAsync(model.Email);
-                   
-                        UserTracking NewUser = new UserTracking();
-                        NewUser.IPAddress = Request.ServerVariables["REMOTE_ADDR"];
-                        NewUser.user_Id = user.Id;
-                        NewUser.insert(NewUser);
+
+                    UserTracking NewUser = new UserTracking();
+                    NewUser.IPAddress = Request.ServerVariables["REMOTE_ADDR"];
+                    NewUser.user_Id = user.Id;
+                    NewUser.insert(NewUser);
                     //Session["IsAdmin"] = "true";
                     //Session["UserName"] = user.Name;
                     return RedirectToLocal(returnUrl);
@@ -145,7 +149,7 @@ namespace RM.Controllers
             // If a user enters incorrect codes for a specified amount of time then the user account 
             // will be locked out for a specified amount of time. 
             // You can configure the account lockout settings in IdentityConfig
-            var result = await SignInManager.TwoFactorSignInAsync(model.Provider, model.Code, isPersistent:  model.RememberMe, rememberBrowser: model.RememberBrowser);
+            var result = await SignInManager.TwoFactorSignInAsync(model.Provider, model.Code, isPersistent: model.RememberMe, rememberBrowser: model.RememberBrowser);
             switch (result)
             {
                 case SignInStatus.Success:
@@ -175,14 +179,25 @@ namespace RM.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email , Name =model.Name ,
-                   PhoneNumber=model.PhoneNumber,PhoneNumber2 = model.PhoneNumber2,
-                    CompanyEmail = model.CompanyEmail ,CompanyName=model.CompanyName,Address = model.Address,
+                var user = new ApplicationUser
+                {
+                    UserName = model.Email,
+                    Email = model.Email,
+                    Name = model.Name,
+                    PhoneNumber = model.PhoneNumber,
+                    PhoneNumber2 = model.PhoneNumber2,
+                    CompanyEmail = model.CompanyEmail,
+                    CompanyName = model.CompanyName,
+                    Address = model.Address,
                     Address2 = model.Address2,
-                    City =model.City, State=model.State,Zip=model.Zip,Fax=model.Fax};
+                    City = model.City,
+                    State = model.State,
+                    Zip = model.Zip,
+                    Fax = model.Fax
+                };
 
-                ApplicationUser au  = await UserManager.FindByEmailAsync(user.UserName) ;
-                if(au != null)
+                ApplicationUser au = await UserManager.FindByEmailAsync(user.UserName);
+                if (au != null)
                 {
                     ModelState.AddModelError("Email", "Username Already Registered.");
                 }
@@ -202,18 +217,24 @@ namespace RM.Controllers
                         newUser.insert(newUser);
                         try
                         {
-                            var smtpClient = new SmtpClient();
+                            // var smtpClient = new SmtpClient();
                             string fromEmailId = System.Configuration.ConfigurationManager.AppSettings["SystemEmailId"];
-
-                            var message = new MailMessage(fromEmailId, user.Email)
+                            var body = "Hello " + user.Name + Environment.NewLine +
+                                    "Your registration is waiting for Admin Approval. Please wait for approval email, to log into website.";
+                            var mailResults = EmailHelper.SendEmail(user.Email, "Registration is waiting for Admin Approval", body, true, fromEmailId);
+                            if (!string.IsNullOrEmpty(mailResults))
                             {
-                                Subject = "Registration is waiting for Admin Approval",
-                                Body =
-                                    "Hello " + user.Name + Environment.NewLine +
-                                    "Your registration is waiting for Admin Approval. Please wait for approval email, to log into website."
+                                ModelState.AddModelError("Mail Error", mailResults);
+                            }
+                            //var message = new MailMessage(fromEmailId, user.Email)
+                            //{
+                            //    Subject = "Registration is waiting for Admin Approval",
+                            //    Body =
+                            //        "Hello " + user.Name + Environment.NewLine +
+                            //        "Your registration is waiting for Admin Approval. Please wait for approval email, to log into website."
 
-                            };
-                            smtpClient.Send(message);
+                            //};
+                            //smtpClient.Send(message);
                         }
                         catch (Exception ex)
                         {
@@ -278,22 +299,33 @@ namespace RM.Controllers
                 {
                     // Send an email with this link
                     string code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
-                    var callbackUrl = Url.Action("ResetPassword", "Account", new {userId = user.Id, code = code},
+                    var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code },
                         protocol: Request.Url.Scheme);
-
-
-                    var smtpClient = new SmtpClient();
-                    string fromEmailId = System.Configuration.ConfigurationManager.AppSettings["SystemEmailId"];
-                    smtpClient.DeliveryFormat = SmtpDeliveryFormat.International;
-                    var message = new MailMessage(fromEmailId, model.Email);
-
-                    message.Subject = "Password Reset";
-                    message.Body =
+                    var body =
                         string.Format("Hi {0}{1}, Please reset your password by clicking <a href=\"{2}\">here</a>",
                             user.Name, Environment.NewLine, callbackUrl);
-                    message.IsBodyHtml = true;
-                    smtpClient.Send(message);
+                    string fromEmailId = System.Configuration.ConfigurationManager.AppSettings["SystemEmailId"];
+                    var mailResults = EmailHelper.SendEmail(model.Email, "RM-Metals Password Reset", body, true, fromEmailId);
+                    if (!string.IsNullOrEmpty(mailResults))
+                    {
+                        ModelState.AddModelError("Mail Error", mailResults);
+                    }
+                    //var smtpClient = new SmtpClient();
+                    //string fromEmailId = System.Configuration.ConfigurationManager.AppSettings["SystemEmailId"];
+                    //smtpClient.DeliveryFormat = SmtpDeliveryFormat.International;
+                    //var message = new MailMessage(fromEmailId, model.Email);
+
+                    //message.Subject = "Password Reset";
+                    //message.Body =
+                    //    string.Format("Hi {0}{1}, Please reset your password by clicking <a href=\"{2}\">here</a>",
+                    //        user.Name, Environment.NewLine, callbackUrl);
+                    //message.IsBodyHtml = true;
+                    //smtpClient.Send(message);
                     return View("ForgotPasswordConfirmation");
+                }
+                else
+                {
+                    ModelState.AddModelError("User Not Exist", "User doesn't exist. Please check emailId");
                 }
             }
             return View(model);
@@ -412,7 +444,7 @@ namespace RM.Controllers
             switch (result)
             {
                 case SignInStatus.Success:
-                   
+
                     return RedirectToLocal(returnUrl);
                 case SignInStatus.LockedOut:
                     return View("Lockout");
@@ -457,7 +489,7 @@ namespace RM.Controllers
                     {
                         await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
                         return RedirectToLocal(returnUrl);
-                       
+
                     }
                 }
                 AddErrors(result);
@@ -475,7 +507,7 @@ namespace RM.Controllers
         {
             AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
 
-            
+
             return RedirectToAction("Index", "Home");
         }
 
