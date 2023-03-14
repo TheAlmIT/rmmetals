@@ -11,6 +11,7 @@ namespace RM
             ConfigureAuth(app);
             // Any connection or hub wire up and configuration should go here
             app.MapSignalR();
+            app.CreatePerOwinContext<ApplicationSignInManager>(ApplicationSignInManager.Create);
         }
     }
 }

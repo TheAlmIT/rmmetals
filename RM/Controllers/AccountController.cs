@@ -444,7 +444,18 @@ namespace RM.Controllers
             switch (result)
             {
                 case SignInStatus.Success:
-
+                    var user = await UserManager.FindByEmailAsync(loginInfo.Email);
+                    if (user != null && user.Approved == false)
+                    {
+                        AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
+                        ModelState.AddModelError("Email", "Please wait for Admin Approval");
+                        //result = SignInStatus.Failure;
+                        //return View(model);
+                        //ViewBag.ReturnUrl = returnUrl;
+                        //ViewBag.LoginProvider = loginInfo.Login.LoginProvider;
+                        //return View("ExternalLoginConfirmation", new ExternalLoginConfirmationViewModel { Email = loginInfo.Email });
+                        return RedirectToLocal("/home/ActivationPending");
+                    }
                     return RedirectToLocal(returnUrl);
                 case SignInStatus.LockedOut:
                     return View("Lockout");
@@ -483,14 +494,15 @@ namespace RM.Controllers
                 var result = await UserManager.CreateAsync(user);
                 if (result.Succeeded)
                 {
-                    return RedirectToLocal("/home/ActivationPending");
+
                     result = await UserManager.AddLoginAsync(user.Id, info.Login);
                     if (result.Succeeded)
                     {
-                        await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
-                        return RedirectToLocal(returnUrl);
+                        //await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+                        //return RedirectToLocal(returnUrl);
 
                     }
+                    return RedirectToLocal("/home/ActivationPending");
                 }
                 AddErrors(result);
             }

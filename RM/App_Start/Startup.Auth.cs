@@ -60,9 +60,12 @@ namespace RM
 
             app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions()
             {
-                ClientId = "35213232261-l3oee8f9qoe3pqqc3j9bdrt8t0uh0jov.apps.googleusercontent.com",
-                ClientSecret = "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"
+                ClientId = "784045040116-09dnq3161j2mo13esr177ivrhq9a66tu.apps.googleusercontent.com",
+                ClientSecret = "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"
+                //ClientId = "589891585994-v8nkelne0jgm9o2psf1gpcvcat32pm0q.apps.googleusercontent.com",
+                //ClientSecret = "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"
             });//rmmetalsapplication@gmail.com//Rmmetals@123
+
         }
     }
 }
